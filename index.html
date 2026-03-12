@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poker Night — Stats &amp; Leaderboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080a0f;--surface:#0e1118;--surface2:#141820;--surface3:#1a1f2b;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
+  --text:#e4e4e7;--text2:#a1a1aa;--text3:#71717a;--text4:#52525b;
+  --gold:#f59e0b;--gold-dim:rgba(245,158,11,0.12);--gold-glow:rgba(245,158,11,0.25);
+  --green:#10b981;--green-dim:rgba(16,185,129,0.1);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.1);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.1);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,0.1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',system-ui,sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden}
+
+/* Animated BG */
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(245,158,11,0.06),transparent),
+             radial-gradient(ellipse 60% 40% at 80% 100%,rgba(16,185,129,0.04),transparent);
+  pointer-events:none;z-index:0}
+
+.container{max-width:960px;margin:0 auto;padding:24px 16px;position:relative;z-index:1}
+
+/* Header */
+.hero{text-align:center;padding:48px 0 40px}
+.hero-suits{font-size:14px;letter-spacing:12px;color:var(--gold);opacity:0.5;margin-bottom:12px}
+.hero h1{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-2px;
+  background:linear-gradient(135deg,#fff 0%,#f59e0b 50%,#ef4444 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.hero-sub{color:var(--text3);font-size:14px;margin-top:10px;font-weight:400;letter-spacing:0.5px}
+.hero-stats{display:flex;justify-content:center;gap:32px;margin-top:28px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat .num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--gold)}
+.hero-stat .label{font-size:11px;color:var(--text4);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+
+/* Nav */
+.nav{display:flex;gap:4px;background:var(--surface);border-radius:14px;padding:5px;margin-bottom:32px;
+  border:1px solid var(--border);position:sticky;top:12px;z-index:100;backdrop-filter:blur(20px)}
+.nav button{flex:1;padding:12px 8px;font-size:13px;font-weight:500;border:none;border-radius:10px;
+  cursor:pointer;transition:all 0.25s;font-family:inherit;color:var(--text3);background:transparent}
+.nav button:hover{color:var(--text2);background:rgba(255,255,255,0.03)}
+.nav button.active{color:var(--gold);background:var(--gold-dim);font-weight:700;box-shadow:0 0 20px rgba(245,158,11,0.08)}
+
+/* Sections */
+.section{display:none;animation:fadeIn 0.35s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;transition:border-color 0.2s}
+.card:hover{border-color:var(--border2)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.section-title{font-size:18px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.section-sub{font-size:12px;color:var(--text4);margin-bottom:20px}
+
+/* Leaderboard */
+.lb-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;margin-bottom:6px;
+  transition:all 0.2s;border:1px solid transparent}
+.lb-row:hover{background:rgba(255,255,255,0.02);border-color:var(--border)}
+.lb-row.top1{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.03));border-color:var(--gold-glow)}
+.lb-row.top2{background:rgba(192,192,192,0.05);border-color:rgba(192,192,192,0.12)}
+.lb-row.top3{background:rgba(205,127,50,0.05);border-color:rgba(205,127,50,0.12)}
+.rank{width:36px;text-align:center;font-size:20px;flex-shrink:0}
+.rank-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--text4)}
+.player-info{flex:1;min-width:0}
+.player-name{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-meta{font-size:11px;color:var(--text4);margin-top:2px}
+.player-score{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;text-align:right;min-width:70px}
+.score-gold{color:var(--gold)}
+.score-green{color:var(--green)}
+
+/* Bar */
+.bar-track{width:100%;height:6px;background:rgba(255,255,255,0.04);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.22,1,0.36,1)}
+.bar-gold{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.bar-green{background:linear-gradient(90deg,#10b981,#34d399)}
+.bar-gray{background:var(--text4)}
+
+/* Game Breakdown */
+.game-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+.game-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;
+  padding-bottom:14px;border-bottom:1px solid var(--border)}
+.game-id{font-size:22px;font-weight:800;color:var(--text)}
+.game-id span{color:var(--gold)}
+.game-date{font-size:13px;color:var(--text3);margin-left:10px;font-weight:400}
+.game-meta{font-size:12px;color:var(--text4);text-align:right}
+.game-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px}
+.game-rank{width:22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex-shrink:0}
+.game-rank.first{color:var(--gold)}
+.game-name{width:90px;font-weight:600;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.game-name.bust{color:var(--red)}
+.game-bar{flex:1;min-width:0}
+.game-score{width:60px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;flex-shrink:0}
+.game-score.bust{color:var(--red)}
+.game-hands{width:28px;text-align:right;font-size:11px;color:var(--text4);flex-shrink:0}
+
+/* Fun Stats */
+.fun-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+  margin-bottom:10px;transition:all 0.25s;cursor:default}
+.fun-card:hover{border-color:var(--border2);transform:translateX(4px)}
+.fun-top{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.fun-icon{font-size:24px;width:36px;text-align:center;flex-shrink:0}
+.fun-label{font-size:11px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:1px}
+.fun-value{font-size:17px;font-weight:700;color:var(--gold);margin-left:48px;margin-bottom:4px}
+.fun-detail{font-size:12px;color:var(--text3);margin-left:48px;line-height:1.5}
+
+/* Player Cards for Player View */
+.player-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;
+  transition:all 0.25s}
+.player-card:hover{border-color:var(--border2)}
+.pc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.pc-name{font-size:18px;font-weight:700}
+.pc-badge{font-size:11px;padding:4px 10px;border-radius:6px;font-weight:600}
+.pc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:14px}
+.pc-stat{background:var(--surface2);border-radius:10px;padding:12px}
+.pc-stat .val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700}
+.pc-stat .lbl{font-size:10px;color:var(--text4);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.pc-games{display:flex;gap:6px;flex-wrap:wrap}
+.pc-game{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;
+  background:var(--surface2);border:1px solid var(--border)}
+.pc-game.bust{color:var(--red);border-color:var(--red-dim)}
+
+/* Responsive */
+@media(max-width:600px){
+  .hero h1{font-size:32px}
+  .hero-stats{gap:20px}
+  .nav{flex-wrap:wrap}
+  .nav button{font-size:11px;padding:10px 6px}
+  .lb-row{padding:12px;gap:10px}
+  .player-score{font-size:14px;min-width:55px}
+  .game-name{width:70px}
+  .pc-stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-suits">♠ ♥ ♦ ♣</div>
+    <h1>Poker Night</h1>
+    <div class="hero-sub">Stats &amp; Leaderboard</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">4</div><div class="label">Games</div></div>
+      <div class="hero-stat"><div class="num">14</div><div class="label">Players</div></div>
+      <div class="hero-stat"><div class="num">88</div><div class="label">Total Hands</div></div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav" id="nav">
+    <button class="active" onclick="showTab(0)">Leaderboard</button>
+    <button onclick="showTab(1)">Efficiency</button>
+    <button onclick="showTab(2)">Games</button>
+    <button onclick="showTab(3)">Players</button>
+    <button onclick="showTab(4)">Awards</button>
+  </div>
+
+  <!-- Tab 0: Leaderboard -->
+  <div class="section active" id="tab0">
+    <div class="section-title">Overall Leaderboard</div>
+    <div class="section-sub">Ranked by total score across all games</div>
+    <div id="leaderboard"></div>
+  </div>
+
+  <!-- Tab 1: Efficiency -->
+  <div class="section" id="tab1">
+    <div class="section-title">Per-Hand Efficiency</div>
+    <div class="section-sub">Average score per hand played — min 2 hands to qualify</div>
+    <div id="efficiency"></div>
+  </div>
+
+  <!-- Tab 2: Games -->
+  <div class="section" id="tab2">
+    <div class="section-title">Game-by-Game Breakdown</div>
+    <div class="section-sub">Individual results for each session</div>
+    <div id="games"></div>
+  </div>
+
+  <!-- Tab 3: Players -->
+  <div class="section" id="tab3">
+    <div class="section-title">Player Profiles</div>
+    <div class="section-sub">Individual stats and game history for each player</div>
+    <div id="players"></div>
+  </div>
+
+  <!-- Tab 4: Awards -->
+  <div class="section" id="tab4">
+    <div class="section-title">Season Awards</div>
+    <div class="section-sub">Notable achievements and fun facts</div>
+    <div id="awards"></div>
+  </div>
+</div>
+
+<script>
+const GAMES = [
+  { id:1, date:"01/03/2026", hands:18, players:[
+    {name:"Veeru",handsPlayed:1,score:5600},{name:"Bala",handsPlayed:2,score:1305},
+    {name:"Venki",handsPlayed:3,score:1885},{name:"Suri",handsPlayed:2,score:1180},
+    {name:"Jags",handsPlayed:1,score:1000},{name:"Ganesh",handsPlayed:1,score:420},
+    {name:"Prakash",handsPlayed:1,score:2100},{name:"Mahesh",handsPlayed:1,score:1085},
+    {name:"Srikanth",handsPlayed:3,score:0},{name:"Rohan",handsPlayed:3,score:3425}
+  ]},
+  { id:2, date:"06/03/2026", hands:24, players:[
+    {name:"Veeru",handsPlayed:1,score:4025},{name:"Chaithu",handsPlayed:1,score:0},
+    {name:"Bala",handsPlayed:4,score:430},{name:"Venki",handsPlayed:3,score:2715},
+    {name:"Sundeep",handsPlayed:1,score:1500},{name:"Suri",handsPlayed:2,score:2505},
+    {name:"Jags",handsPlayed:1,score:2655},{name:"Ganesh",handsPlayed:2,score:3720},
+    {name:"Prakash",handsPlayed:1,score:2005},{name:"Mahesh",handsPlayed:4,score:765},
+    {name:"Srikanth",handsPlayed:1,score:735},{name:"Rohan",handsPlayed:2,score:1945},
+    {name:"Mahi",handsPlayed:1,score:1000}
+  ]},
+  { id:3, date:"07/02/2026", hands:19, players:[
+    {name:"Chaithu",handsPlayed:3,score:0},{name:"Bala",handsPlayed:3,score:1155},
+    {name:"Suri",handsPlayed:4,score:3750},{name:"Ganesh",handsPlayed:1,score:6060},
+    {name:"Mahesh",handsPlayed:2,score:3000},{name:"Srikanth",handsPlayed:2,score:3380},
+    {name:"Rohan",handsPlayed:3,score:1655},{name:"Pradeep",handsPlayed:1,score:0}
+  ]},
+  { id:4, date:"08/02/2025", hands:27, players:[
+    {name:"Veeru",handsPlayed:3,score:0},{name:"Chaithu",handsPlayed:1,score:2470},
+    {name:"Bala",handsPlayed:1,score:8770},{name:"Venki",handsPlayed:2,score:2700},
+    {name:"Suri",handsPlayed:3,score:3750},{name:"Jags",handsPlayed:4,score:1110},
+    {name:"Ganesh",handsPlayed:5,score:345},{name:"Mahesh",handsPlayed:3,score:3300},
+    {name:"Srikanth",handsPlayed:1,score:2550},{name:"Rohan",handsPlayed:4,score:2005}
+  ]}
+];
+
+// Aggregate
+function getAgg(){
+  const m={};
+  GAMES.forEach(g=>{
+    g.players.forEach(p=>{
+      if(!m[p.name]) m[p.name]={name:p.name,totalScore:0,totalHands:0,games:0,scores:[],bestGame:0,zeroGames:0,gameDetails:[]};
+      m[p.name].totalScore+=p.score;
+      m[p.name].totalHands+=p.handsPlayed;
+      m[p.name].games+=1;
+      m[p.name].scores.push(p.score);
+      m[p.name].gameDetails.push({gameId:g.id,date:g.date,score:p.score,hands:p.handsPlayed});
+      if(p.score>m[p.name].bestGame) m[p.name].bestGame=p.score;
+      if(p.score===0) m[p.name].zeroGames+=1;
+    });
+  });
+  return Object.values(m).map(p=>({...p,
+    avgPerHand:p.totalHands>0?Math.round(p.totalScore/p.totalHands):0,
+    avgPerGame:p.games>0?Math.round(p.totalScore/p.games):0
+  }));
+}
+
+const agg=getAgg();
+const byTotal=[...agg].sort((a,b)=>b.totalScore-a.totalScore);
+const byEfficiency=[...agg].filter(p=>p.totalHands>=2).sort((a,b)=>b.avgPerHand-a.avgPerHand);
+
+function medal(i){return i===0?'🥇':i===1?'🥈':i===2?'🥉':null}
+function fmt(n){return n.toLocaleString()}
+
+// Tab switching
+function showTab(i){
+  document.querySelectorAll('.section').forEach((s,idx)=>{s.classList.toggle('active',idx===i)});
+  document.querySelectorAll('.nav button').forEach((b,idx)=>{b.classList.toggle('active',idx===i)});
+}
+
+// Render Leaderboard
+function renderLeaderboard(){
+  const el=document.getElementById('leaderboard');
+  const maxScore=byTotal[0]?.totalScore||1;
+  el.innerHTML=byTotal.map((p,i)=>{
+    const cls=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    const rankContent=medal(i)||`<span class="rank-num">${i+1}</span>`;
+    const pct=((p.totalScore/maxScore)*100).toFixed(1);
+    return `<div class="lb-row ${cls}">
+      <div class="rank">${rankContent}</div>
+      <div class="player-info">
+        <div class="player-name">${p.name}</div>
+        <div class="player-meta">${p.games} game${p.games>1?'s':''} · ${p.totalHands} hands · Best: ${fmt(p.bestGame)}</div>
+        <div class="bar-track"><div class="bar-fill ${i<3?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div>
+      </div>
+      <div class="player-score score-gold">${fmt(p.totalScore)}</div>
+    </div>`;
+  }).join('');
+}
+
+// Render Efficiency
+function renderEfficiency(){
+  const el=document.getElementById('efficiency');
+  const maxAvg=byEfficiency[0]?.avgPerHand||1;
+  el.innerHTML=byEfficiency.map((p,i)=>{
+    const cls=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    const rankContent=medal(i)||`<span class="rank-num">${i+1}</span>`;
+    const pct=((p.avgPerHand/maxAvg)*100).toFixed(1);
+    return `<div class="lb-row ${cls}" style="${i<3?'border-color:rgba(16,185,129,0.2);background:'+['rgba(16,185,129,0.08)','rgba(16,185,129,0.05)','rgba(16,185,129,0.03)'][i]:''}">
+      <div class="rank">${rankContent}</div>
+      <div class="player-info">
+        <div class="player-name">${p.name}</div>
+        <div class="player-meta">Total: ${fmt(p.totalScore)} across ${p.totalHands} hands · ${p.games} game${p.games>1?'s':''}</div>
+        <div class="bar-track"><div class="bar-fill ${i<3?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div>
+      </div>
+      <div class="player-score score-green">${fmt(p.avgPerHand)}<span style="font-size:11px;font-weight:400;color:var(--text4)">/hand</span></div>
+    </div>`;
+  }).join('');
+}
+
+// Render Games
+function renderGames(){
+  const el=document.getElementById('games');
+  el.innerHTML=GAMES.map(g=>{
+    const sorted=[...g.players].sort((a,b)=>b.score-a.score);
+    const gMax=sorted[0]?.score||1;
+    const totalPot=g.players.reduce((s,p)=>s+p.score,0);
+    return `<div class="game-card">
+      <div class="game-header">
+        <div><span class="game-id">Game <span>${g.id}</span></span><span class="game-date">${g.date}</span></div>
+        <div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Total pot: ${fmt(totalPot)}</div>
+      </div>
+      ${sorted.map((p,i)=>{
+        const pct=gMax>0?((p.score/gMax)*100).toFixed(1):'0';
+        return `<div class="game-row">
+          <div class="game-rank ${i===0?'first':''}">${i+1}</div>
+          <div class="game-name ${p.score===0?'bust':''}">${p.name}</div>
+          <div class="game-bar"><div class="bar-track"><div class="bar-fill ${i===0?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div></div>
+          <div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div>
+          <div class="game-hands">(${p.handsPlayed})</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+}
+
+// Render Players
+function renderPlayers(){
+  const el=document.getElementById('players');
+  const sorted=[...agg].sort((a,b)=>b.totalScore-a.totalScore);
+  el.innerHTML=sorted.map((p,rank)=>{
+    const badgeColor=rank<3?'var(--gold)':'var(--text4)';
+    const badgeBg=rank<3?'var(--gold-dim)':'var(--surface2)';
+    return `<div class="player-card">
+      <div class="pc-header">
+        <div class="pc-name">${medal(rank)?medal(rank)+' ':''}${p.name}</div>
+        <div class="pc-badge" style="color:${badgeColor};background:${badgeBg}">Rank #${rank+1}</div>
+      </div>
+      <div class="pc-stats">
+        <div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.totalScore)}</div><div class="lbl">Total Score</div></div>
+        <div class="pc-stat"><div class="val">${p.games}</div><div class="lbl">Games</div></div>
+        <div class="pc-stat"><div class="val">${p.totalHands}</div><div class="lbl">Hands</div></div>
+        <div class="pc-stat"><div class="val" style="color:var(--green)">${fmt(p.avgPerHand)}</div><div class="lbl">Avg / Hand</div></div>
+        <div class="pc-stat"><div class="val">${fmt(p.avgPerGame)}</div><div class="lbl">Avg / Game</div></div>
+        <div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.bestGame)}</div><div class="lbl">Best Game</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--text4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Game History</div>
+      <div class="pc-games">
+        ${p.gameDetails.map(gd=>`<div class="pc-game ${gd.score===0?'bust':''}">G${gd.gameId}: ${gd.score===0?'BUST':fmt(gd.score)} <span style="color:var(--text4)">(${gd.hands}h)</span></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Render Awards
+function renderAwards(){
+  const el=document.getElementById('awards');
+  const stats=[
+    {icon:"🏆",label:"Highest Single-Game Score",value:"Bala — 8,770 (Game 4)",detail:"Dominated Game 4, taking roughly 32% of all chips on the table"},
+    {icon:"👑",label:"Overall Champion (So Far)",value:"Bala — 11,660 total",detail:"Leads the pack across 4 games with 10 hands played, edging out Suri by just 475 points"},
+    {icon:"🎯",label:"Most Consistent Player",value:"Rohan",detail:"Scored 3,425 / 1,945 / 1,655 / 2,005 across all 4 games — always in the mix, never busted"},
+    {icon:"🎢",label:"Biggest Roller Coaster",value:"Ganesh",detail:"420 → 3,720 → 6,060 → 345 — the wildest swings in the group"},
+    {icon:"⚡",label:"Best Per-Hand Efficiency",value:"Prakash — 2,053/hand",detail:"Only 2 hands across 2 games but scored 4,105 total — clinical precision"},
+    {icon:"🃏",label:"Most Hands Played",value:"Rohan (12 hands)",detail:"The iron man of the table, followed by Suri (11) then Bala & Mahesh (10 each)"},
+    {icon:"💀",label:"Busted Out (Zero Score)",value:"Srikanth, Chaithu (×2), Veeru, Pradeep",detail:"Srikanth bust in Game 1, Chaithu in Games 2 & 3 before a 2,470 comeback in Game 4"},
+    {icon:"📅",label:"All 4 Games Club",value:"Bala, Suri, Ganesh, Mahesh, Srikanth, Rohan",detail:"The 6 regulars who showed up to every single session"},
+    {icon:"📈",label:"Biggest Breakout",value:"Veeru — 5,600 (Game 1)",detail:"Second-highest single-game score ever, right out the gate in Game 1"},
+    {icon:"📉",label:"Steepest Decline",value:"Veeru: 5,600 → 4,025 → 0",detail:"Went from the top of Game 1 to busting out by Game 4"},
+    {icon:"🔥",label:"Hot Streak",value:"Suri — 3,750 back-to-back",detail:"Identical scores in Games 3 and 4 — the definition of steady hands"},
+    {icon:"👻",label:"One-Game Wonders",value:"Sundeep, Mahi, Pradeep",detail:"Appeared once and vanished into the night"}
+  ];
+  el.innerHTML=stats.map(s=>`<div class="fun-card">
+    <div class="fun-top"><div class="fun-icon">${s.icon}</div><div class="fun-label">${s.label}</div></div>
+    <div class="fun-value">${s.value}</div>
+    <div class="fun-detail">${s.detail}</div>
+  </div>`).join('');
+}
+
+// Init
+renderLeaderboard();
+renderEfficiency();
+renderGames();
+renderPlayers();
+renderAwards();
+</script>
+</body>
+</html>
