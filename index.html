@@ -19,16 +19,12 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',system-ui,sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden}
-
-/* Animated BG */
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
   background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(245,158,11,0.06),transparent),
              radial-gradient(ellipse 60% 40% at 80% 100%,rgba(16,185,129,0.04),transparent);
   pointer-events:none;z-index:0}
-
 .container{max-width:960px;margin:0 auto;padding:24px 16px;position:relative;z-index:1}
 
-/* Header */
 .hero{text-align:center;padding:48px 0 40px}
 .hero-suits{font-size:14px;letter-spacing:12px;color:var(--gold);opacity:0.5;margin-bottom:12px}
 .hero h1{font-size:clamp(36px,6vw,56px);font-weight:900;letter-spacing:-2px;
@@ -40,70 +36,77 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
 .hero-stat .num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--gold)}
 .hero-stat .label{font-size:11px;color:var(--text4);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
 
-/* Nav */
+.admin-toggle{position:fixed;bottom:20px;right:20px;z-index:200;background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text3);font-family:inherit;font-size:12px;padding:10px 16px;border-radius:10px;cursor:pointer;
+  transition:all 0.25s;display:flex;align-items:center;gap:6px}
+.admin-toggle:hover{border-color:var(--gold-glow);color:var(--gold)}
+.admin-toggle.logged-in{border-color:var(--green);color:var(--green)}
+
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);
+  z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:32px;
+  width:90%;max-width:440px;animation:fadeIn 0.25s ease}
+.modal h2{font-size:20px;font-weight:700;margin-bottom:6px}
+.modal p{font-size:13px;color:var(--text3);margin-bottom:16px}
+.modal input{width:100%;padding:12px 16px;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color 0.2s;margin-bottom:10px}
+.modal input:focus{border-color:var(--gold)}
+.modal-actions{display:flex;gap:10px;margin-top:10px}
+.modal-error{color:var(--red);font-size:12px;margin-top:4px;display:none}
+
+.btn{padding:10px 20px;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:#d97706}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text3)}.btn-ghost:hover{border-color:var(--text3);color:var(--text)}
+.btn-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,0.2)}.btn-red:hover{background:rgba(239,68,68,0.2)}
+.btn-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.2)}.btn-green:hover{background:rgba(16,185,129,0.2)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:8px}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+
 .nav{display:flex;gap:4px;background:var(--surface);border-radius:14px;padding:5px;margin-bottom:32px;
   border:1px solid var(--border);position:sticky;top:12px;z-index:100;backdrop-filter:blur(20px)}
 .nav button{flex:1;padding:12px 8px;font-size:13px;font-weight:500;border:none;border-radius:10px;
   cursor:pointer;transition:all 0.25s;font-family:inherit;color:var(--text3);background:transparent}
 .nav button:hover{color:var(--text2);background:rgba(255,255,255,0.03)}
 .nav button.active{color:var(--gold);background:var(--gold-dim);font-weight:700;box-shadow:0 0 20px rgba(245,158,11,0.08)}
+.nav button.admin-tab.active{color:var(--green);background:var(--green-dim)}
 
-/* Sections */
-.section{display:none;animation:fadeIn 0.35s ease}
-.section.active{display:block}
+.section{display:none;animation:fadeIn 0.35s ease}.section.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* Cards */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;transition:border-color 0.2s}
-.card:hover{border-color:var(--border2)}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .section-title{font-size:18px;font-weight:700;color:var(--text2);margin-bottom:6px}
 .section-sub{font-size:12px;color:var(--text4);margin-bottom:20px}
 
-/* Leaderboard */
-.lb-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;margin-bottom:6px;
-  transition:all 0.2s;border:1px solid transparent}
+.lb-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;margin-bottom:6px;transition:all 0.2s;border:1px solid transparent}
 .lb-row:hover{background:rgba(255,255,255,0.02);border-color:var(--border)}
 .lb-row.top1{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.03));border-color:var(--gold-glow)}
 .lb-row.top2{background:rgba(192,192,192,0.05);border-color:rgba(192,192,192,0.12)}
 .lb-row.top3{background:rgba(205,127,50,0.05);border-color:rgba(205,127,50,0.12)}
 .rank{width:36px;text-align:center;font-size:20px;flex-shrink:0}
 .rank-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--text4)}
-.player-info{flex:1;min-width:0}
-.player-name{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-info{flex:1;min-width:0}.player-name{font-weight:600;font-size:15px}
 .player-meta{font-size:11px;color:var(--text4);margin-top:2px}
 .player-score{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;text-align:right;min-width:70px}
-.score-gold{color:var(--gold)}
-.score-green{color:var(--green)}
+.score-gold{color:var(--gold)}.score-green{color:var(--green)}
 
-/* Bar */
 .bar-track{width:100%;height:6px;background:rgba(255,255,255,0.04);border-radius:3px;overflow:hidden;margin-top:6px}
 .bar-fill{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.22,1,0.36,1)}
 .bar-gold{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
 .bar-green{background:linear-gradient(90deg,#10b981,#34d399)}
 .bar-gray{background:var(--text4)}
 
-/* Game Breakdown */
 .game-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
-.game-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;
-  padding-bottom:14px;border-bottom:1px solid var(--border)}
-.game-id{font-size:22px;font-weight:800;color:var(--text)}
-.game-id span{color:var(--gold)}
-.game-date{font-size:13px;color:var(--text3);margin-left:10px;font-weight:400}
-.game-meta{font-size:12px;color:var(--text4);text-align:right}
+.game-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.game-id{font-size:22px;font-weight:800}.game-id span{color:var(--gold)}
+.game-date{font-size:13px;color:var(--text3);margin-left:10px}.game-meta{font-size:12px;color:var(--text4);text-align:right}
 .game-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px}
 .game-rank{width:22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex-shrink:0}
 .game-rank.first{color:var(--gold)}
-.game-name{width:90px;font-weight:600;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.game-name.bust{color:var(--red)}
+.game-name{width:90px;font-weight:600;flex-shrink:0}.game-name.bust{color:var(--red)}
 .game-bar{flex:1;min-width:0}
-.game-score{width:60px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;flex-shrink:0}
-.game-score.bust{color:var(--red)}
+.game-score{width:60px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;flex-shrink:0}.game-score.bust{color:var(--red)}
 .game-hands{width:28px;text-align:right;font-size:11px;color:var(--text4);flex-shrink:0}
 
-/* Fun Stats */
-.fun-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
-  margin-bottom:10px;transition:all 0.25s;cursor:default}
+.fun-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:10px;transition:all 0.25s;cursor:default}
 .fun-card:hover{border-color:var(--border2);transform:translateX(4px)}
 .fun-top{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 .fun-icon{font-size:24px;width:36px;text-align:center;flex-shrink:0}
@@ -111,9 +114,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
 .fun-value{font-size:17px;font-weight:700;color:var(--gold);margin-left:48px;margin-bottom:4px}
 .fun-detail{font-size:12px;color:var(--text3);margin-left:48px;line-height:1.5}
 
-/* Player Cards for Player View */
-.player-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;
-  transition:all 0.25s}
+.player-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;transition:all 0.25s}
 .player-card:hover{border-color:var(--border2)}
 .pc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .pc-name{font-size:18px;font-weight:700}
@@ -123,39 +124,67 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
 .pc-stat .val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700}
 .pc-stat .lbl{font-size:10px;color:var(--text4);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
 .pc-games{display:flex;gap:6px;flex-wrap:wrap}
-.pc-game{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;
-  background:var(--surface2);border:1px solid var(--border)}
+.pc-game{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;background:var(--surface2);border:1px solid var(--border)}
 .pc-game.bust{color:var(--red);border-color:var(--red-dim)}
 
-/* Responsive */
+.admin-section{border:1px solid rgba(16,185,129,0.15);border-radius:16px;padding:24px;background:rgba(16,185,129,0.03)}
+.admin-header{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.admin-header h2{font-size:20px;font-weight:800;color:var(--green)}
+.admin-badge{font-size:10px;padding:3px 8px;border-radius:5px;background:var(--green-dim);color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.form-row{display:flex;gap:12px;flex-wrap:wrap}
+.form-input{padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;
+  color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color 0.2s;width:100%}
+.form-input:focus{border-color:var(--gold)}.form-input-sm{width:120px}.form-input::placeholder{color:var(--text4)}
+
+.score-table{width:100%;border-collapse:separate;border-spacing:0}
+.score-table th{text-align:left;font-size:11px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:1px;padding:10px 12px;border-bottom:1px solid var(--border2)}
+.score-table td{padding:6px 8px;vertical-align:middle}
+.score-table tr:hover td{background:rgba(255,255,255,0.02)}
+.score-table input[type="checkbox"]{width:18px;height:18px;accent-color:var(--gold);cursor:pointer}
+.score-table input[type="number"]{width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;-moz-appearance:textfield}
+.score-table input[type="number"]::-webkit-outer-spin-button,.score-table input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
+.score-table input[type="number"]:focus{border-color:var(--gold)}
+.score-table input[type="number"]:disabled{opacity:0.3;cursor:not-allowed}
+.score-table .pname{font-weight:600;font-size:14px}
+
+.add-player-row{display:flex;gap:10px;align-items:center;margin-top:12px;padding:12px;background:var(--surface2);border-radius:10px;border:1px dashed var(--border2)}
+.add-player-row input[type="text"]{flex:1;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;outline:none}
+.add-player-row input[type="text"]:focus{border-color:var(--gold)}
+
+.saved-game{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.saved-game-info{flex:1}.saved-game-title{font-weight:700;font-size:14px}.saved-game-detail{font-size:12px;color:var(--text4);margin-top:2px}
+
+.github-config{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.github-config h3{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--blue)}
+.github-config p{font-size:12px;color:var(--text4);margin-bottom:12px;line-height:1.5}
+.gh-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:6px;font-weight:600}
+.gh-status.ok{background:var(--green-dim);color:var(--green)}.gh-status.err{background:var(--red-dim);color:var(--red)}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--text4);border-top-color:var(--gold);border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);
+  color:#000;padding:12px 24px;border-radius:10px;font-weight:600;font-size:13px;z-index:400;opacity:0;
+  transition:all 0.3s ease;pointer-events:none;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast.error{background:var(--red);color:#fff}
+
 @media(max-width:600px){
-  .hero h1{font-size:32px}
-  .hero-stats{gap:20px}
-  .nav{flex-wrap:wrap}
-  .nav button{font-size:11px;padding:10px 6px}
-  .lb-row{padding:12px;gap:10px}
-  .player-score{font-size:14px;min-width:55px}
-  .game-name{width:70px}
-  .pc-stats{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:32px}.hero-stats{gap:20px}.nav{flex-wrap:wrap}.nav button{font-size:11px;padding:10px 6px}
+  .lb-row{padding:12px;gap:10px}.player-score{font-size:14px;min-width:55px}.game-name{width:70px}
+  .pc-stats{grid-template-columns:repeat(2,1fr)}.form-row{flex-direction:column}.form-input-sm{width:100%}
+  .admin-toggle{bottom:12px;right:12px;font-size:11px;padding:8px 12px}
 }
 </style>
 </head>
 <body>
-
 <div class="container">
-  <!-- Hero -->
   <div class="hero">
     <div class="hero-suits">♠ ♥ ♦ ♣</div>
     <h1>Poker Night</h1>
     <div class="hero-sub">Stats &amp; Leaderboard</div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="num">4</div><div class="label">Games</div></div>
-      <div class="hero-stat"><div class="num">14</div><div class="label">Players</div></div>
-      <div class="hero-stat"><div class="num">88</div><div class="label">Total Hands</div></div>
-    </div>
+    <div class="hero-stats" id="heroStats"></div>
   </div>
-
-  <!-- Nav -->
   <div class="nav" id="nav">
     <button class="active" onclick="showTab(0)">Leaderboard</button>
     <button onclick="showTab(1)">Efficiency</button>
@@ -163,234 +192,194 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
     <button onclick="showTab(3)">Players</button>
     <button onclick="showTab(4)">Awards</button>
   </div>
+  <div class="section active" id="tab0"><div class="section-title">Overall Leaderboard</div><div class="section-sub">Ranked by total score across all games</div><div id="leaderboard"></div></div>
+  <div class="section" id="tab1"><div class="section-title">Per-Hand Efficiency</div><div class="section-sub">Average score per hand — min 2 hands to qualify</div><div id="efficiency"></div></div>
+  <div class="section" id="tab2"><div class="section-title">Game-by-Game Breakdown</div><div class="section-sub">Individual results for each session</div><div id="games"></div></div>
+  <div class="section" id="tab3"><div class="section-title">Player Profiles</div><div class="section-sub">Stats and game history per player</div><div id="players"></div></div>
+  <div class="section" id="tab4"><div class="section-title">Season Awards</div><div class="section-sub">Notable achievements and fun facts</div><div id="awards"></div></div>
 
-  <!-- Tab 0: Leaderboard -->
-  <div class="section active" id="tab0">
-    <div class="section-title">Overall Leaderboard</div>
-    <div class="section-sub">Ranked by total score across all games</div>
-    <div id="leaderboard"></div>
-  </div>
+  <!-- Admin Tab -->
+  <div class="section" id="tab5">
+    <div class="admin-section">
+      <div class="admin-header"><h2>Admin Panel</h2><span class="admin-badge">Restricted</span></div>
+      <p style="font-size:13px;color:var(--text3);margin-bottom:24px">Add game scores visible to all team members. Saves directly to your GitHub repo.</p>
 
-  <!-- Tab 1: Efficiency -->
-  <div class="section" id="tab1">
-    <div class="section-title">Per-Hand Efficiency</div>
-    <div class="section-sub">Average score per hand played — min 2 hands to qualify</div>
-    <div id="efficiency"></div>
-  </div>
+      <div class="github-config" id="ghConfig">
+        <h3>GitHub Connection</h3>
+        <p>To save scores for everyone, connect your GitHub repo. Create a
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=PokerNight" target="_blank" style="color:var(--blue);text-decoration:underline">Personal Access Token</a>
+          with <strong>repo</strong> scope. Token is stored only in your browser.</p>
+        <div style="margin-bottom:10px"><label class="form-label">GitHub Token</label>
+          <input type="password" id="ghToken" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"></div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div style="flex:1"><label class="form-label">Repo Owner</label><input type="text" id="ghOwner" class="form-input" value="fre756"></div>
+          <div style="flex:1"><label class="form-label">Repo Name</label><input type="text" id="ghRepo" class="form-input" value="PokerEbbsfleet"></div>
+          <div style="flex:1"><label class="form-label">Branch</label><input type="text" id="ghBranch" class="form-input" value="main"></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="btn btn-sm btn-green" onclick="testGitHub()">Test Connection</button>
+          <button class="btn btn-sm btn-ghost" onclick="saveGHConfig()">Save Config</button>
+          <span id="ghStatus"></span>
+        </div>
+      </div>
 
-  <!-- Tab 2: Games -->
-  <div class="section" id="tab2">
-    <div class="section-title">Game-by-Game Breakdown</div>
-    <div class="section-sub">Individual results for each session</div>
-    <div id="games"></div>
-  </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">Add New Game</h3>
+        <div class="form-row" style="margin-bottom:16px">
+          <div style="flex:1"><label class="form-label">Game Number</label><input type="number" id="adminGameId" class="form-input form-input-sm" placeholder="e.g. 5" min="1"></div>
+          <div style="flex:1"><label class="form-label">Date (DD/MM/YYYY)</label><input type="text" id="adminGameDate" class="form-input" placeholder="e.g. 15/03/2026"></div>
+          <div style="flex:1"><label class="form-label">Total Hands</label><input type="number" id="adminGameHands" class="form-input form-input-sm" placeholder="e.g. 20" min="1"></div>
+        </div>
+        <label class="form-label" style="margin-bottom:10px;display:block">Player Scores — tick players who participated</label>
+        <div style="overflow-x:auto"><table class="score-table"><thead><tr><th style="width:40px"></th><th>Player</th><th style="width:130px">Score</th><th style="width:100px">Hands Played</th></tr></thead><tbody id="scoreTableBody"></tbody></table></div>
+        <div class="add-player-row"><span style="font-size:13px;color:var(--text3)">New player:</span>
+          <input type="text" id="newPlayerName" placeholder="Enter name" onkeydown="if(event.key==='Enter')addNewPlayer()">
+          <button class="btn btn-sm btn-ghost" onclick="addNewPlayer()">+ Add</button></div>
+        <div style="display:flex;gap:10px;margin-top:20px;align-items:center">
+          <button class="btn btn-gold" id="saveBtn" onclick="submitGame()">Save Game to GitHub</button>
+          <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+          <span id="saveStatus"></span>
+        </div>
+      </div>
 
-  <!-- Tab 3: Players -->
-  <div class="section" id="tab3">
-    <div class="section-title">Player Profiles</div>
-    <div class="section-sub">Individual stats and game history for each player</div>
-    <div id="players"></div>
-  </div>
-
-  <!-- Tab 4: Awards -->
-  <div class="section" id="tab4">
-    <div class="section-title">Season Awards</div>
-    <div class="section-sub">Notable achievements and fun facts</div>
-    <div id="awards"></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:4px">Manage Added Games</h3>
+        <p style="font-size:12px;color:var(--text4);margin-bottom:16px">Admin-added games. Original games (1–4) are locked.</p>
+        <div id="managedGames"></div>
+      </div>
+      <div style="margin-top:16px;text-align:right"><button class="btn btn-sm btn-ghost" onclick="adminLogout()" style="color:var(--red)">Logout</button></div>
+    </div>
   </div>
 </div>
 
+<button class="admin-toggle" id="adminToggle" onclick="handleAdminClick()">
+  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+  <span id="adminToggleText">Admin</span>
+</button>
+
+<div class="modal-overlay" id="loginModal"><div class="modal">
+  <h2>Admin Login</h2><p>Enter the admin password to manage scores.</p>
+  <input type="password" id="adminPassword" placeholder="Password" onkeydown="if(event.key==='Enter')attemptLogin()">
+  <div class="modal-error" id="loginError">Incorrect password. Try again.</div>
+  <div class="modal-actions"><button class="btn btn-gold" onclick="attemptLogin()">Login</button>
+    <button class="btn btn-ghost" onclick="closeLoginModal()">Cancel</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const GAMES = [
-  { id:1, date:"01/03/2026", hands:18, players:[
-    {name:"Veeru",handsPlayed:1,score:5600},{name:"Bala",handsPlayed:2,score:1305},
-    {name:"Venki",handsPlayed:3,score:1885},{name:"Suri",handsPlayed:2,score:1180},
-    {name:"Jags",handsPlayed:1,score:1000},{name:"Ganesh",handsPlayed:1,score:420},
-    {name:"Prakash",handsPlayed:1,score:2100},{name:"Mahesh",handsPlayed:1,score:1085},
-    {name:"Srikanth",handsPlayed:3,score:0},{name:"Rohan",handsPlayed:3,score:3425}
-  ]},
-  { id:2, date:"06/03/2026", hands:24, players:[
-    {name:"Veeru",handsPlayed:1,score:4025},{name:"Chaithu",handsPlayed:1,score:0},
-    {name:"Bala",handsPlayed:4,score:430},{name:"Venki",handsPlayed:3,score:2715},
-    {name:"Sundeep",handsPlayed:1,score:1500},{name:"Suri",handsPlayed:2,score:2505},
-    {name:"Jags",handsPlayed:1,score:2655},{name:"Ganesh",handsPlayed:2,score:3720},
-    {name:"Prakash",handsPlayed:1,score:2005},{name:"Mahesh",handsPlayed:4,score:765},
-    {name:"Srikanth",handsPlayed:1,score:735},{name:"Rohan",handsPlayed:2,score:1945},
-    {name:"Mahi",handsPlayed:1,score:1000}
-  ]},
-  { id:3, date:"07/02/2026", hands:19, players:[
-    {name:"Chaithu",handsPlayed:3,score:0},{name:"Bala",handsPlayed:3,score:1155},
-    {name:"Suri",handsPlayed:4,score:3750},{name:"Ganesh",handsPlayed:1,score:6060},
-    {name:"Mahesh",handsPlayed:2,score:3000},{name:"Srikanth",handsPlayed:2,score:3380},
-    {name:"Rohan",handsPlayed:3,score:1655},{name:"Pradeep",handsPlayed:1,score:0}
-  ]},
-  { id:4, date:"08/02/2025", hands:27, players:[
-    {name:"Veeru",handsPlayed:3,score:0},{name:"Chaithu",handsPlayed:1,score:2470},
-    {name:"Bala",handsPlayed:1,score:8770},{name:"Venki",handsPlayed:2,score:2700},
-    {name:"Suri",handsPlayed:3,score:3750},{name:"Jags",handsPlayed:4,score:1110},
-    {name:"Ganesh",handsPlayed:5,score:345},{name:"Mahesh",handsPlayed:3,score:3300},
-    {name:"Srikanth",handsPlayed:1,score:2550},{name:"Rohan",handsPlayed:4,score:2005}
-  ]}
+// ===== CONFIG =====
+const ADMIN_PASSWORD = "poker2026";
+const DEFAULT_GH = {owner:"fre756",repo:"PokerEbbsfleet",branch:"main"};
+const DATA_PATH = "games.json";
+
+// ===== BASE DATA =====
+const BASE_GAMES = [
+  {id:1,date:"01/03/2026",hands:18,players:[{name:"Veeru",handsPlayed:1,score:5600},{name:"Bala",handsPlayed:2,score:1305},{name:"Venki",handsPlayed:3,score:1885},{name:"Suri",handsPlayed:2,score:1180},{name:"Jags",handsPlayed:1,score:1000},{name:"Ganesh",handsPlayed:1,score:420},{name:"Prakash",handsPlayed:1,score:2100},{name:"Mahesh",handsPlayed:1,score:1085},{name:"Srikanth",handsPlayed:3,score:0},{name:"Rohan",handsPlayed:3,score:3425}]},
+  {id:2,date:"06/03/2026",hands:24,players:[{name:"Veeru",handsPlayed:1,score:4025},{name:"Chaithu",handsPlayed:1,score:0},{name:"Bala",handsPlayed:4,score:430},{name:"Venki",handsPlayed:3,score:2715},{name:"Sundeep",handsPlayed:1,score:1500},{name:"Suri",handsPlayed:2,score:2505},{name:"Jags",handsPlayed:1,score:2655},{name:"Ganesh",handsPlayed:2,score:3720},{name:"Prakash",handsPlayed:1,score:2005},{name:"Mahesh",handsPlayed:4,score:765},{name:"Srikanth",handsPlayed:1,score:735},{name:"Rohan",handsPlayed:2,score:1945},{name:"Mahi",handsPlayed:1,score:1000}]},
+  {id:3,date:"07/02/2026",hands:19,players:[{name:"Chaithu",handsPlayed:3,score:0},{name:"Bala",handsPlayed:3,score:1155},{name:"Suri",handsPlayed:4,score:3750},{name:"Ganesh",handsPlayed:1,score:6060},{name:"Mahesh",handsPlayed:2,score:3000},{name:"Srikanth",handsPlayed:2,score:3380},{name:"Rohan",handsPlayed:3,score:1655},{name:"Pradeep",handsPlayed:1,score:0}]},
+  {id:4,date:"08/02/2025",hands:27,players:[{name:"Veeru",handsPlayed:3,score:0},{name:"Chaithu",handsPlayed:1,score:2470},{name:"Bala",handsPlayed:1,score:8770},{name:"Venki",handsPlayed:2,score:2700},{name:"Suri",handsPlayed:3,score:3750},{name:"Jags",handsPlayed:4,score:1110},{name:"Ganesh",handsPlayed:5,score:345},{name:"Mahesh",handsPlayed:3,score:3300},{name:"Srikanth",handsPlayed:1,score:2550},{name:"Rohan",handsPlayed:4,score:2005}]}
 ];
 
-// Aggregate
-function getAgg(){
-  const m={};
-  GAMES.forEach(g=>{
-    g.players.forEach(p=>{
-      if(!m[p.name]) m[p.name]={name:p.name,totalScore:0,totalHands:0,games:0,scores:[],bestGame:0,zeroGames:0,gameDetails:[]};
-      m[p.name].totalScore+=p.score;
-      m[p.name].totalHands+=p.handsPlayed;
-      m[p.name].games+=1;
-      m[p.name].scores.push(p.score);
-      m[p.name].gameDetails.push({gameId:g.id,date:g.date,score:p.score,hands:p.handsPlayed});
-      if(p.score>m[p.name].bestGame) m[p.name].bestGame=p.score;
-      if(p.score===0) m[p.name].zeroGames+=1;
-    });
-  });
-  return Object.values(m).map(p=>({...p,
-    avgPerHand:p.totalHands>0?Math.round(p.totalScore/p.totalHands):0,
-    avgPerGame:p.games>0?Math.round(p.totalScore/p.games):0
-  }));
+// ===== STATE =====
+let isAdmin=false, addedGames=[], customPlayers=[], ghFileSha=null;
+
+// ===== LOAD SHARED DATA =====
+async function loadSharedData(){
+  try{const r=await fetch(DATA_PATH+'?t='+Date.now());if(r.ok){const d=await r.json();addedGames=d.addedGames||[];customPlayers=d.customPlayers||[];}}catch(e){}
+  refreshAll();
 }
 
-const agg=getAgg();
-const byTotal=[...agg].sort((a,b)=>b.totalScore-a.totalScore);
-const byEfficiency=[...agg].filter(p=>p.totalHands>=2).sort((a,b)=>b.avgPerHand-a.avgPerHand);
+// ===== GITHUB API =====
+function ghCfg(){return{token:localStorage.getItem('gh_token')||'',owner:localStorage.getItem('gh_owner')||DEFAULT_GH.owner,repo:localStorage.getItem('gh_repo')||DEFAULT_GH.repo,branch:localStorage.getItem('gh_branch')||DEFAULT_GH.branch}}
+function saveGHConfig(){localStorage.setItem('gh_token',document.getElementById('ghToken').value.trim());localStorage.setItem('gh_owner',document.getElementById('ghOwner').value.trim()||DEFAULT_GH.owner);localStorage.setItem('gh_repo',document.getElementById('ghRepo').value.trim()||DEFAULT_GH.repo);localStorage.setItem('gh_branch',document.getElementById('ghBranch').value.trim()||DEFAULT_GH.branch);showToast('GitHub config saved')}
+function loadGHConfig(){const c=ghCfg();document.getElementById('ghToken').value=c.token;document.getElementById('ghOwner').value=c.owner;document.getElementById('ghRepo').value=c.repo;document.getElementById('ghBranch').value=c.branch}
 
+async function testGitHub(){
+  const c=ghCfg(),el=document.getElementById('ghStatus');
+  if(!c.token){el.innerHTML='<span class="gh-status err">No token set</span>';return}
+  el.innerHTML='<span class="spinner"></span> Testing...';
+  try{const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}?ref=${c.branch}`,{headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github.v3+json'}});
+    if(r.ok){ghFileSha=(await r.json()).sha;el.innerHTML='<span class="gh-status ok">Connected — games.json found</span>'}
+    else if(r.status===404){ghFileSha=null;el.innerHTML='<span class="gh-status ok">Connected — will create games.json on first save</span>'}
+    else el.innerHTML='<span class="gh-status err">Auth failed ('+r.status+')</span>';
+  }catch(e){el.innerHTML='<span class="gh-status err">Network error</span>'}
+}
+
+async function saveToGitHub(){
+  const c=ghCfg();if(!c.token){showToast('Set a GitHub token first',true);return false}
+  const payload=JSON.stringify({addedGames,customPlayers},null,2);
+  const content=btoa(unescape(encodeURIComponent(payload)));
+  try{const gr=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}?ref=${c.branch}`,{headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github.v3+json'}});
+    if(gr.ok)ghFileSha=(await gr.json()).sha;else if(gr.status===404)ghFileSha=null;
+  }catch(e){}
+  const body={message:'Update poker scores',content,branch:c.branch};if(ghFileSha)body.sha=ghFileSha;
+  try{const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}`,{method:'PUT',headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(r.ok||r.status===201){ghFileSha=(await r.json()).content.sha;return true}
+    const err=await r.json();showToast('GitHub error: '+(err.message||'Unknown'),true);return false;
+  }catch(e){showToast('Network error',true);return false}
+}
+
+// ===== CORE =====
+function getAllGames(){return[...BASE_GAMES,...addedGames].sort((a,b)=>a.id-b.id)}
+function getAllPlayerNames(){const n=new Set();getAllGames().forEach(g=>g.players.forEach(p=>n.add(p.name)));customPlayers.forEach(x=>n.add(x));return[...n].sort()}
+function getAgg(){const m={};getAllGames().forEach(g=>{g.players.forEach(p=>{if(!m[p.name])m[p.name]={name:p.name,totalScore:0,totalHands:0,games:0,scores:[],bestGame:0,zeroGames:0,gameDetails:[]};m[p.name].totalScore+=p.score;m[p.name].totalHands+=p.handsPlayed;m[p.name].games+=1;m[p.name].scores.push(p.score);m[p.name].gameDetails.push({gameId:g.id,date:g.date,score:p.score,hands:p.handsPlayed});if(p.score>m[p.name].bestGame)m[p.name].bestGame=p.score;if(p.score===0)m[p.name].zeroGames+=1})});return Object.values(m).map(p=>({...p,avgPerHand:p.totalHands>0?Math.round(p.totalScore/p.totalHands):0,avgPerGame:p.games>0?Math.round(p.totalScore/p.games):0}))}
 function medal(i){return i===0?'🥇':i===1?'🥈':i===2?'🥉':null}
 function fmt(n){return n.toLocaleString()}
+function showTab(i){document.querySelectorAll('.section').forEach((s,x)=>s.classList.toggle('active',x===i));document.querySelectorAll('.nav button').forEach((b,x)=>b.classList.toggle('active',x===i))}
 
-// Tab switching
-function showTab(i){
-  document.querySelectorAll('.section').forEach((s,idx)=>{s.classList.toggle('active',idx===i)});
-  document.querySelectorAll('.nav button').forEach((b,idx)=>{b.classList.toggle('active',idx===i)});
+// ===== RENDERS =====
+function renderHero(){const g=getAllGames();const ps=new Set();let th=0;g.forEach(x=>{th+=x.hands;x.players.forEach(p=>ps.add(p.name))});document.getElementById('heroStats').innerHTML=`<div class="hero-stat"><div class="num">${g.length}</div><div class="label">Games</div></div><div class="hero-stat"><div class="num">${ps.size}</div><div class="label">Players</div></div><div class="hero-stat"><div class="num">${th}</div><div class="label">Total Hands</div></div>`}
+
+function renderLeaderboard(){const a=getAgg(),s=[...a].sort((x,y)=>y.totalScore-x.totalScore),el=document.getElementById('leaderboard'),mx=s[0]?.totalScore||1;el.innerHTML=s.map((p,i)=>{const c=i===0?'top1':i===1?'top2':i===2?'top3':'',rk=medal(i)||`<span class="rank-num">${i+1}</span>`,pct=((p.totalScore/mx)*100).toFixed(1);return`<div class="lb-row ${c}"><div class="rank">${rk}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${p.games} game${p.games>1?'s':''} · ${p.totalHands} hands · Best: ${fmt(p.bestGame)}</div><div class="bar-track"><div class="bar-fill ${i<3?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="player-score score-gold">${fmt(p.totalScore)}</div></div>`}).join('')}
+
+function renderEfficiency(){const a=getAgg(),s=[...a].filter(p=>p.totalHands>=2).sort((x,y)=>y.avgPerHand-x.avgPerHand),el=document.getElementById('efficiency'),mx=s[0]?.avgPerHand||1;el.innerHTML=s.map((p,i)=>{const rk=medal(i)||`<span class="rank-num">${i+1}</span>`,pct=((p.avgPerHand/mx)*100).toFixed(1),bg=i<3?'border-color:rgba(16,185,129,0.2);background:'+['rgba(16,185,129,0.08)','rgba(16,185,129,0.05)','rgba(16,185,129,0.03)'][i]:'';return`<div class="lb-row" style="${bg}"><div class="rank">${rk}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">Total: ${fmt(p.totalScore)} across ${p.totalHands} hands · ${p.games} game${p.games>1?'s':''}</div><div class="bar-track"><div class="bar-fill ${i<3?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="player-score score-green">${fmt(p.avgPerHand)}<span style="font-size:11px;font-weight:400;color:var(--text4)">/hand</span></div></div>`}).join('')}
+
+function renderGames(){const gs=getAllGames(),el=document.getElementById('games');el.innerHTML=gs.map(g=>{const s=[...g.players].sort((a,b)=>b.score-a.score),mx=s[0]?.score||1,pot=g.players.reduce((t,p)=>t+p.score,0);return`<div class="game-card"><div class="game-header"><div><span class="game-id">Game <span>${g.id}</span></span><span class="game-date">${g.date}</span></div><div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Total pot: ${fmt(pot)}</div></div>${s.map((p,i)=>{const pct=mx>0?((p.score/mx)*100).toFixed(1):'0';return`<div class="game-row"><div class="game-rank ${i===0?'first':''}">${i+1}</div><div class="game-name ${p.score===0?'bust':''}">${p.name}</div><div class="game-bar"><div class="bar-track"><div class="bar-fill ${i===0?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div><div class="game-hands">(${p.handsPlayed})</div></div>`}).join('')}</div>`}).join('')}
+
+function renderPlayers(){const a=getAgg(),s=[...a].sort((x,y)=>y.totalScore-x.totalScore),el=document.getElementById('players');el.innerHTML=s.map((p,r)=>{const bc=r<3?'var(--gold)':'var(--text4)',bb=r<3?'var(--gold-dim)':'var(--surface2)';return`<div class="player-card"><div class="pc-header"><div class="pc-name">${medal(r)?medal(r)+' ':''}${p.name}</div><div class="pc-badge" style="color:${bc};background:${bb}">Rank #${r+1}</div></div><div class="pc-stats"><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.totalScore)}</div><div class="lbl">Total Score</div></div><div class="pc-stat"><div class="val">${p.games}</div><div class="lbl">Games</div></div><div class="pc-stat"><div class="val">${p.totalHands}</div><div class="lbl">Hands</div></div><div class="pc-stat"><div class="val" style="color:var(--green)">${fmt(p.avgPerHand)}</div><div class="lbl">Avg / Hand</div></div><div class="pc-stat"><div class="val">${fmt(p.avgPerGame)}</div><div class="lbl">Avg / Game</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.bestGame)}</div><div class="lbl">Best Game</div></div></div><div style="font-size:12px;color:var(--text4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Game History</div><div class="pc-games">${p.gameDetails.map(gd=>`<div class="pc-game ${gd.score===0?'bust':''}">G${gd.gameId}: ${gd.score===0?'BUST':fmt(gd.score)} <span style="color:var(--text4)">(${gd.hands}h)</span></div>`).join('')}</div></div>`}).join('')}
+
+function renderAwards(){const a=getAgg(),bt=[...a].sort((x,y)=>y.totalScore-x.totalScore),be=[...a].filter(p=>p.totalHands>=2).sort((x,y)=>y.avgPerHand-x.avgPerHand),gs=getAllGames();let hs={name:'',score:0,gid:0};gs.forEach(g=>g.players.forEach(p=>{if(p.score>hs.score)hs={name:p.name,score:p.score,gid:g.id}}));let mh={name:'',h:0},bu=[];a.forEach(p=>{if(p.totalHands>mh.h)mh={name:p.name,h:p.totalHands};if(p.zeroGames>0)bu.push({name:p.name,c:p.zeroGames})});const nG=gs.length,regs=a.filter(p=>p.games===nG).map(p=>p.name),ones=a.filter(p=>p.games===1).map(p=>p.name);
+  const st=[{icon:"🏆",label:"Highest Single-Game Score",value:`${hs.name} — ${fmt(hs.score)} (Game ${hs.gid})`,detail:"The biggest single-game haul in the group's history"},{icon:"👑",label:"Overall Champion",value:`${bt[0]?.name} — ${fmt(bt[0]?.totalScore)} total`,detail:`Leading across ${bt[0]?.games} games`},{icon:"⚡",label:"Best Per-Hand Efficiency",value:`${be[0]?.name} — ${fmt(be[0]?.avgPerHand)}/hand`,detail:`${be[0]?.totalHands} hands, ${fmt(be[0]?.totalScore)} total`},{icon:"🃏",label:"Most Hands Played",value:`${mh.name} (${mh.h})`,detail:"Iron man of the table"},{icon:"💀",label:"Busted Out",value:bu.map(b=>`${b.name}${b.c>1?' (×'+b.c+')':''}`).join(', ')||'Nobody!',detail:"Went bust at least once"},{icon:"📅",label:`All ${nG} Games Club`,value:regs.join(', ')||'Nobody yet',detail:"Every single session"},{icon:"👻",label:"One-Game Wonders",value:ones.join(', ')||'None',detail:"Appeared once and vanished"}];
+  document.getElementById('awards').innerHTML=st.map(s=>`<div class="fun-card"><div class="fun-top"><div class="fun-icon">${s.icon}</div><div class="fun-label">${s.label}</div></div><div class="fun-value">${s.value}</div><div class="fun-detail">${s.detail}</div></div>`).join('')}
+
+// ===== ADMIN =====
+function handleAdminClick(){if(isAdmin){showTab(5);return}document.getElementById('loginModal').classList.add('show');document.getElementById('adminPassword').value='';document.getElementById('loginError').style.display='none';setTimeout(()=>document.getElementById('adminPassword').focus(),100)}
+function attemptLogin(){if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){isAdmin=true;closeLoginModal();enableAdmin();showTab(5);showToast('Logged in as Admin')}else{document.getElementById('loginError').style.display='block';document.getElementById('adminPassword').value='';document.getElementById('adminPassword').focus()}}
+function closeLoginModal(){document.getElementById('loginModal').classList.remove('show')}
+function adminLogout(){isAdmin=false;disableAdmin();showTab(0);showToast('Logged out')}
+function enableAdmin(){const n=document.getElementById('nav');if(!document.getElementById('adminNavBtn')){const b=document.createElement('button');b.id='adminNavBtn';b.className='admin-tab';b.onclick=()=>showTab(5);b.textContent='Admin';n.appendChild(b)}document.getElementById('adminToggle').classList.add('logged-in');document.getElementById('adminToggleText').textContent='Admin Panel';loadGHConfig();renderScoreTable();renderManagedGames()}
+function disableAdmin(){const b=document.getElementById('adminNavBtn');if(b)b.remove();document.getElementById('adminToggle').classList.remove('logged-in');document.getElementById('adminToggleText').textContent='Admin'}
+
+// ===== SCORE TABLE =====
+function renderScoreTable(){const ns=getAllPlayerNames();document.getElementById('scoreTableBody').innerHTML=ns.map(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_');return`<tr><td><input type="checkbox" id="chk_${s}" onchange="toggleRow('${s}')"></td><td><span class="pname">${n}</span></td><td><input type="number" id="score_${s}" min="0" value="0" disabled></td><td><input type="number" id="hands_${s}" min="1" value="1" disabled></td></tr>`}).join('')}
+function toggleRow(s){const on=document.getElementById('chk_'+s).checked;document.getElementById('score_'+s).disabled=!on;document.getElementById('hands_'+s).disabled=!on;if(on)document.getElementById('score_'+s).focus()}
+function addNewPlayer(){const i=document.getElementById('newPlayerName'),n=i.value.trim();if(!n)return;if(getAllPlayerNames().map(x=>x.toLowerCase()).includes(n.toLowerCase())){showToast('Player exists',true);return}customPlayers.push(n);i.value='';renderScoreTable();showToast(n+' added')}
+
+async function submitGame(){
+  const gid=parseInt(document.getElementById('adminGameId').value),date=document.getElementById('adminGameDate').value.trim(),hands=parseInt(document.getElementById('adminGameHands').value);
+  if(!gid||!date||!hands){showToast('Fill in game number, date, and hands',true);return}
+  if(getAllGames().find(g=>g.id===gid)){showToast('Game '+gid+' exists',true);return}
+  const players=[];getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk&&chk.checked)players.push({name:n,handsPlayed:parseInt(document.getElementById('hands_'+s).value)||1,score:parseInt(document.getElementById('score_'+s).value)||0})});
+  if(!players.length){showToast('Select at least one player',true);return}
+  addedGames.push({id:gid,date,hands,players});
+  const btn=document.getElementById('saveBtn'),st=document.getElementById('saveStatus');btn.disabled=true;st.innerHTML='<span class="spinner"></span> Saving to GitHub...';
+  const ok=await saveToGitHub();btn.disabled=false;
+  if(ok){st.innerHTML='<span class="gh-status ok">Saved! Site updates in ~1 min</span>';setTimeout(()=>st.innerHTML='',5000);clearForm();refreshAll();showToast('Game '+gid+' saved to GitHub!')}
+  else{addedGames.pop();st.innerHTML=''}
 }
 
-// Render Leaderboard
-function renderLeaderboard(){
-  const el=document.getElementById('leaderboard');
-  const maxScore=byTotal[0]?.totalScore||1;
-  el.innerHTML=byTotal.map((p,i)=>{
-    const cls=i===0?'top1':i===1?'top2':i===2?'top3':'';
-    const rankContent=medal(i)||`<span class="rank-num">${i+1}</span>`;
-    const pct=((p.totalScore/maxScore)*100).toFixed(1);
-    return `<div class="lb-row ${cls}">
-      <div class="rank">${rankContent}</div>
-      <div class="player-info">
-        <div class="player-name">${p.name}</div>
-        <div class="player-meta">${p.games} game${p.games>1?'s':''} · ${p.totalHands} hands · Best: ${fmt(p.bestGame)}</div>
-        <div class="bar-track"><div class="bar-fill ${i<3?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div>
-      </div>
-      <div class="player-score score-gold">${fmt(p.totalScore)}</div>
-    </div>`;
-  }).join('');
-}
+async function deleteAddedGame(idx){if(!confirm('Delete Game '+addedGames[idx].id+'?'))return;addedGames.splice(idx,1);if(await saveToGitHub()){refreshAll();showToast('Deleted & synced')}else showToast('Delete failed',true)}
 
-// Render Efficiency
-function renderEfficiency(){
-  const el=document.getElementById('efficiency');
-  const maxAvg=byEfficiency[0]?.avgPerHand||1;
-  el.innerHTML=byEfficiency.map((p,i)=>{
-    const cls=i===0?'top1':i===1?'top2':i===2?'top3':'';
-    const rankContent=medal(i)||`<span class="rank-num">${i+1}</span>`;
-    const pct=((p.avgPerHand/maxAvg)*100).toFixed(1);
-    return `<div class="lb-row ${cls}" style="${i<3?'border-color:rgba(16,185,129,0.2);background:'+['rgba(16,185,129,0.08)','rgba(16,185,129,0.05)','rgba(16,185,129,0.03)'][i]:''}">
-      <div class="rank">${rankContent}</div>
-      <div class="player-info">
-        <div class="player-name">${p.name}</div>
-        <div class="player-meta">Total: ${fmt(p.totalScore)} across ${p.totalHands} hands · ${p.games} game${p.games>1?'s':''}</div>
-        <div class="bar-track"><div class="bar-fill ${i<3?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div>
-      </div>
-      <div class="player-score score-green">${fmt(p.avgPerHand)}<span style="font-size:11px;font-weight:400;color:var(--text4)">/hand</span></div>
-    </div>`;
-  }).join('');
-}
+function clearForm(){document.getElementById('adminGameId').value='';document.getElementById('adminGameDate').value='';document.getElementById('adminGameHands').value='';getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk){chk.checked=false;document.getElementById('score_'+s).value=0;document.getElementById('score_'+s).disabled=true;document.getElementById('hands_'+s).value=1;document.getElementById('hands_'+s).disabled=true}})}
 
-// Render Games
-function renderGames(){
-  const el=document.getElementById('games');
-  el.innerHTML=GAMES.map(g=>{
-    const sorted=[...g.players].sort((a,b)=>b.score-a.score);
-    const gMax=sorted[0]?.score||1;
-    const totalPot=g.players.reduce((s,p)=>s+p.score,0);
-    return `<div class="game-card">
-      <div class="game-header">
-        <div><span class="game-id">Game <span>${g.id}</span></span><span class="game-date">${g.date}</span></div>
-        <div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Total pot: ${fmt(totalPot)}</div>
-      </div>
-      ${sorted.map((p,i)=>{
-        const pct=gMax>0?((p.score/gMax)*100).toFixed(1):'0';
-        return `<div class="game-row">
-          <div class="game-rank ${i===0?'first':''}">${i+1}</div>
-          <div class="game-name ${p.score===0?'bust':''}">${p.name}</div>
-          <div class="game-bar"><div class="bar-track"><div class="bar-fill ${i===0?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div></div>
-          <div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div>
-          <div class="game-hands">(${p.handsPlayed})</div>
-        </div>`;
-      }).join('')}
-    </div>`;
-  }).join('');
-}
+function renderManagedGames(){const el=document.getElementById('managedGames');if(!addedGames.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text4);font-size:13px">No admin-added games yet.</div>';return}el.innerHTML=addedGames.map((g,i)=>`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${g.id} — ${g.date}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(g.players.reduce((t,p)=>t+p.score,0))}</div></div><button class="btn btn-sm btn-red" onclick="deleteAddedGame(${i})">Delete</button></div>`).join('')}
 
-// Render Players
-function renderPlayers(){
-  const el=document.getElementById('players');
-  const sorted=[...agg].sort((a,b)=>b.totalScore-a.totalScore);
-  el.innerHTML=sorted.map((p,rank)=>{
-    const badgeColor=rank<3?'var(--gold)':'var(--text4)';
-    const badgeBg=rank<3?'var(--gold-dim)':'var(--surface2)';
-    return `<div class="player-card">
-      <div class="pc-header">
-        <div class="pc-name">${medal(rank)?medal(rank)+' ':''}${p.name}</div>
-        <div class="pc-badge" style="color:${badgeColor};background:${badgeBg}">Rank #${rank+1}</div>
-      </div>
-      <div class="pc-stats">
-        <div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.totalScore)}</div><div class="lbl">Total Score</div></div>
-        <div class="pc-stat"><div class="val">${p.games}</div><div class="lbl">Games</div></div>
-        <div class="pc-stat"><div class="val">${p.totalHands}</div><div class="lbl">Hands</div></div>
-        <div class="pc-stat"><div class="val" style="color:var(--green)">${fmt(p.avgPerHand)}</div><div class="lbl">Avg / Hand</div></div>
-        <div class="pc-stat"><div class="val">${fmt(p.avgPerGame)}</div><div class="lbl">Avg / Game</div></div>
-        <div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.bestGame)}</div><div class="lbl">Best Game</div></div>
-      </div>
-      <div style="font-size:12px;color:var(--text4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Game History</div>
-      <div class="pc-games">
-        ${p.gameDetails.map(gd=>`<div class="pc-game ${gd.score===0?'bust':''}">G${gd.gameId}: ${gd.score===0?'BUST':fmt(gd.score)} <span style="color:var(--text4)">(${gd.hands}h)</span></div>`).join('')}
-      </div>
-    </div>`;
-  }).join('');
-}
+function showToast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(err?' error':'');setTimeout(()=>t.className='toast',3000)}
+function refreshAll(){renderHero();renderLeaderboard();renderEfficiency();renderGames();renderPlayers();renderAwards();if(isAdmin){renderScoreTable();renderManagedGames()}}
 
-// Render Awards
-function renderAwards(){
-  const el=document.getElementById('awards');
-  const stats=[
-    {icon:"🏆",label:"Highest Single-Game Score",value:"Bala — 8,770 (Game 4)",detail:"Dominated Game 4, taking roughly 32% of all chips on the table"},
-    {icon:"👑",label:"Overall Champion (So Far)",value:"Bala — 11,660 total",detail:"Leads the pack across 4 games with 10 hands played, edging out Suri by just 475 points"},
-    {icon:"🎯",label:"Most Consistent Player",value:"Rohan",detail:"Scored 3,425 / 1,945 / 1,655 / 2,005 across all 4 games — always in the mix, never busted"},
-    {icon:"🎢",label:"Biggest Roller Coaster",value:"Ganesh",detail:"420 → 3,720 → 6,060 → 345 — the wildest swings in the group"},
-    {icon:"⚡",label:"Best Per-Hand Efficiency",value:"Prakash — 2,053/hand",detail:"Only 2 hands across 2 games but scored 4,105 total — clinical precision"},
-    {icon:"🃏",label:"Most Hands Played",value:"Rohan (12 hands)",detail:"The iron man of the table, followed by Suri (11) then Bala & Mahesh (10 each)"},
-    {icon:"💀",label:"Busted Out (Zero Score)",value:"Srikanth, Chaithu (×2), Veeru, Pradeep",detail:"Srikanth bust in Game 1, Chaithu in Games 2 & 3 before a 2,470 comeback in Game 4"},
-    {icon:"📅",label:"All 4 Games Club",value:"Bala, Suri, Ganesh, Mahesh, Srikanth, Rohan",detail:"The 6 regulars who showed up to every single session"},
-    {icon:"📈",label:"Biggest Breakout",value:"Veeru — 5,600 (Game 1)",detail:"Second-highest single-game score ever, right out the gate in Game 1"},
-    {icon:"📉",label:"Steepest Decline",value:"Veeru: 5,600 → 4,025 → 0",detail:"Went from the top of Game 1 to busting out by Game 4"},
-    {icon:"🔥",label:"Hot Streak",value:"Suri — 3,750 back-to-back",detail:"Identical scores in Games 3 and 4 — the definition of steady hands"},
-    {icon:"👻",label:"One-Game Wonders",value:"Sundeep, Mahi, Pradeep",detail:"Appeared once and vanished into the night"}
-  ];
-  el.innerHTML=stats.map(s=>`<div class="fun-card">
-    <div class="fun-top"><div class="fun-icon">${s.icon}</div><div class="fun-label">${s.label}</div></div>
-    <div class="fun-value">${s.value}</div>
-    <div class="fun-detail">${s.detail}</div>
-  </div>`).join('');
-}
-
-// Init
-renderLeaderboard();
-renderEfficiency();
-renderGames();
-renderPlayers();
-renderAwards();
+// ===== INIT =====
+loadSharedData();
 </script>
 </body>
 </html>
