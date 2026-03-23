@@ -242,6 +242,38 @@
           "score": 0
         }
       ]
+    },
+    {
+      "id": 9,
+      "date": "22/03/2026",
+      "hands": 10,
+      "players": [
+        {
+          "name": "Ganesh",
+          "handsPlayed": 1,
+          "score": 2550
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 1,
+          "score": 1850
+        },
+        {
+          "name": "Pradeep",
+          "handsPlayed": 3,
+          "score": 4575
+        },
+        {
+          "name": "Prakash",
+          "handsPlayed": 2,
+          "score": 665
+        },
+        {
+          "name": "Rohan",
+          "handsPlayed": 3,
+          "score": 360
+        }
+      ]
     }
   ],
   "customPlayers": []
