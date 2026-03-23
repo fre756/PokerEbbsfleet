@@ -346,6 +346,43 @@
           "score": 735
         }
       ]
+    },
+    {
+      "id": 11,
+      "date": "22/03/2026",
+      "hands": 9,
+      "players": [
+        {
+          "name": "Ganesh",
+          "handsPlayed": 2,
+          "score": 530
+        },
+        {
+          "name": "Jags",
+          "handsPlayed": 1,
+          "score": 3995
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 1,
+          "score": 2200
+        },
+        {
+          "name": "Prakash",
+          "handsPlayed": 1,
+          "score": 0
+        },
+        {
+          "name": "Rohan",
+          "handsPlayed": 2,
+          "score": 775
+        },
+        {
+          "name": "Srikanth",
+          "handsPlayed": 2,
+          "score": 1500
+        }
+      ]
     }
   ],
   "customPlayers": []
