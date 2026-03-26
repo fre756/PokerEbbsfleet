@@ -1,1 +1,52 @@
-{"addedGames":[],"customPlayers":[]}
+{
+  "addedGames": [
+    {
+      "id": 14,
+      "date": "24/03/2026",
+      "hands": 17,
+      "players": [
+        {
+          "name": "Bala",
+          "handsPlayed": 1,
+          "score": 1040
+        },
+        {
+          "name": "Ganesh",
+          "handsPlayed": 1,
+          "score": 2600
+        },
+        {
+          "name": "Jags",
+          "handsPlayed": 1,
+          "score": 4150
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 6,
+          "score": 5200
+        },
+        {
+          "name": "Mahi",
+          "handsPlayed": 2,
+          "score": 0
+        },
+        {
+          "name": "Prakash",
+          "handsPlayed": 2,
+          "score": 2800
+        },
+        {
+          "name": "Rohan",
+          "handsPlayed": 3,
+          "score": 0
+        },
+        {
+          "name": "Srikanth",
+          "handsPlayed": 1,
+          "score": 1210
+        }
+      ]
+    }
+  ],
+  "customPlayers": []
+}
