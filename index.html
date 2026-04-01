@@ -145,16 +145,26 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
         <div style="display:flex;gap:10px;align-items:center"><button class="btn btn-sm btn-green" onclick="testGitHub()">Test</button><button class="btn btn-sm btn-ghost" onclick="saveGHConfig()">Save Config</button><span id="ghStatus"></span></div>
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
-        <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">Add New Game</h3>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:16px" id="formTitle">Add New Game</h3>
         <div class="form-row" style="margin-bottom:16px"><div style="flex:1"><label class="form-label">Game Number</label><input type="number" id="adminGameId" class="form-input form-input-sm" min="1"></div><div style="flex:1"><label class="form-label">Date (DD/MM/YYYY)</label><input type="text" id="adminGameDate" class="form-input"></div><div style="flex:1"><label class="form-label">Total Hands</label><input type="number" id="adminGameHands" class="form-input form-input-sm" min="1"></div></div>
         <label class="form-label" style="margin-bottom:10px;display:block">Player Scores — tick who participated</label>
         <div style="overflow-x:auto"><table class="score-table"><thead><tr><th style="width:40px"></th><th>Player</th><th style="width:130px">Score</th><th style="width:100px">Hands</th></tr></thead><tbody id="scoreTableBody"></tbody></table></div>
         <div class="add-player-row"><span style="font-size:13px;color:var(--text3)">New player:</span><input type="text" id="newPlayerName" placeholder="Name" onkeydown="if(event.key==='Enter')addNewPlayer()"><button class="btn btn-sm btn-ghost" onclick="addNewPlayer()">+ Add</button></div>
-        <div style="display:flex;gap:10px;margin-top:20px;align-items:center"><button class="btn btn-gold" id="saveBtn" onclick="submitGame()">Save Game to GitHub</button><button class="btn btn-ghost" onclick="clearForm()">Clear</button><span id="saveStatus"></span></div>
+        <div style="display:flex;gap:10px;margin-top:20px;align-items:center">
+          <button class="btn btn-gold" id="saveBtn" onclick="submitGame()">Save Game to GitHub</button>
+          <button class="btn btn-ghost" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;color:var(--red)">Cancel Edit</button>
+          <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+          <span id="saveStatus"></span>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:4px">All Games</h3>
+        <p style="font-size:12px;color:var(--text4);margin-bottom:16px">Click Edit to modify any game's scores.</p>
+        <div id="allGamesList"></div>
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px">
         <h3 style="font-size:16px;font-weight:700;margin-bottom:4px">Manage Added Games</h3>
-        <p style="font-size:12px;color:var(--text4);margin-bottom:16px">Games added via admin. Base games (1–21) are locked.</p>
+        <p style="font-size:12px;color:var(--text4);margin-bottom:16px">Games added via admin. Base games (1–21) cannot be deleted.</p>
         <div id="managedGames"></div>
       </div>
       <div style="margin-top:16px;text-align:right"><button class="btn btn-sm btn-ghost" onclick="adminLogout()" style="color:var(--red)">Exit Admin</button></div>
@@ -194,7 +204,7 @@ const BASE_GAMES=[
 ];
 
 // ===== STATE =====
-let isAdminMode=false,addedGames=[],customPlayers=[],ghFileSha=null,selectedMonth='current';
+let isAdminMode=false,addedGames=[],customPlayers=[],editedBaseGames={},ghFileSha=null,selectedMonth='current',editingGameId=null;
 
 // ===== MONTH HELPERS =====
 function parseDate(d){const p=d.split('/');return{day:+p[0],month:+p[1]-1,year:+p[2]}}
@@ -220,10 +230,16 @@ function getFilteredGames(){
 function getEffectiveMonthKey(){return selectedMonth==='current'?currentMonthKey():selectedMonth}
 
 // ===== LOAD =====
-async function loadSharedData(){try{const r=await fetch(DATA_PATH+'?t='+Date.now());if(r.ok){const d=await r.json();addedGames=d.addedGames||[];customPlayers=d.customPlayers||[]}}catch(e){}refreshAll()}
+async function loadSharedData(){try{const r=await fetch(DATA_PATH+'?t='+Date.now());if(r.ok){const d=await r.json();addedGames=d.addedGames||[];customPlayers=d.customPlayers||[];editedBaseGames=d.editedBaseGames||{}}}catch(e){}refreshAll()}
 
 // ===== CORE =====
-function getAllGames(){return[...BASE_GAMES,...addedGames].sort((a,b)=>a.id-b.id)}
+function getAllGames(){
+  const base=BASE_GAMES.map(g=>{
+    const edit=editedBaseGames[g.id];
+    return edit?{...g,...edit}:g;
+  });
+  return[...base,...addedGames].sort((a,b)=>a.id-b.id);
+}
 function getAllPlayerNames(){const n=new Set();getAllGames().forEach(g=>g.players.forEach(p=>n.add(p.name)));customPlayers.forEach(x=>n.add(x));return[...n].sort()}
 
 function getAgg(games){
@@ -341,7 +357,7 @@ function handleAdminClick(){if(isAdminMode){showTab(5);return}document.getElemen
 function attemptAdminLogin(){if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){isAdminMode=true;closeAdminModal();enableAdmin();showTab(5);showToast('Admin mode')}else{document.getElementById('adminLoginError').style.display='block';document.getElementById('adminPassword').value=''}}
 function closeAdminModal(){document.getElementById('loginModal').classList.remove('show')}
 function adminLogout(){isAdminMode=false;disableAdmin();showTab(0);showToast('Exited admin')}
-function enableAdmin(){const n=document.getElementById('nav');if(!document.getElementById('adminNavBtn')){const b=document.createElement('button');b.id='adminNavBtn';b.className='admin-tab';b.onclick=()=>showTab(5);b.textContent='Admin';n.appendChild(b)}document.getElementById('adminToggle').classList.add('logged-in');document.getElementById('adminToggleText').textContent='Admin Panel';loadGHConfig();renderScoreTable();renderManagedGames()}
+function enableAdmin(){const n=document.getElementById('nav');if(!document.getElementById('adminNavBtn')){const b=document.createElement('button');b.id='adminNavBtn';b.className='admin-tab';b.onclick=()=>showTab(5);b.textContent='Admin';n.appendChild(b)}document.getElementById('adminToggle').classList.add('logged-in');document.getElementById('adminToggleText').textContent='Admin Panel';loadGHConfig();renderScoreTable();renderAllGames();renderManagedGames()}
 function disableAdmin(){const b=document.getElementById('adminNavBtn');if(b)b.remove();document.getElementById('adminToggle').classList.remove('logged-in');document.getElementById('adminToggleText').textContent='Admin'}
 
 // ===== GITHUB =====
@@ -349,19 +365,106 @@ function ghCfg(){return{token:localStorage.getItem('gh_token')||'',owner:localSt
 function saveGHConfig(){localStorage.setItem('gh_token',document.getElementById('ghToken').value.trim());localStorage.setItem('gh_owner',document.getElementById('ghOwner').value.trim()||DEFAULT_GH.owner);localStorage.setItem('gh_repo',document.getElementById('ghRepo').value.trim()||DEFAULT_GH.repo);localStorage.setItem('gh_branch',document.getElementById('ghBranch').value.trim()||DEFAULT_GH.branch);showToast('Config saved')}
 function loadGHConfig(){const c=ghCfg();document.getElementById('ghToken').value=c.token;document.getElementById('ghOwner').value=c.owner;document.getElementById('ghRepo').value=c.repo;document.getElementById('ghBranch').value=c.branch}
 async function testGitHub(){const c=ghCfg(),el=document.getElementById('ghStatus');if(!c.token){el.innerHTML='<span class="gh-status err">No token</span>';return}el.innerHTML='<span class="spinner"></span>';try{const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}?ref=${c.branch}`,{headers:{'Authorization':'Bearer '+c.token}});if(r.ok){ghFileSha=(await r.json()).sha;el.innerHTML='<span class="gh-status ok">Connected</span>'}else if(r.status===404){ghFileSha=null;el.innerHTML='<span class="gh-status ok">Connected — will create on first save</span>'}else el.innerHTML='<span class="gh-status err">Failed ('+r.status+')</span>'}catch(e){el.innerHTML='<span class="gh-status err">Error</span>'}}
-async function saveToGitHub(){const c=ghCfg();if(!c.token){showToast('Set GitHub token first',true);return false}const payload=JSON.stringify({addedGames,customPlayers},null,2),content=btoa(unescape(encodeURIComponent(payload)));try{const gr=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}?ref=${c.branch}`,{headers:{'Authorization':'Bearer '+c.token}});if(gr.ok)ghFileSha=(await gr.json()).sha;else ghFileSha=null}catch(e){}const body={message:'Update poker scores via admin',content,branch:c.branch};if(ghFileSha)body.sha=ghFileSha;try{const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}`,{method:'PUT',headers:{'Authorization':'Bearer '+c.token,'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.ok||r.status===201){ghFileSha=(await r.json()).content.sha;return true}const err=await r.json();showToast('GitHub: '+(err.message||'Error'),true);return false}catch(e){showToast('Network error',true);return false}}
+async function saveToGitHub(){const c=ghCfg();if(!c.token){showToast('Set GitHub token first',true);return false}const payload=JSON.stringify({addedGames,customPlayers,editedBaseGames},null,2),content=btoa(unescape(encodeURIComponent(payload)));try{const gr=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}?ref=${c.branch}`,{headers:{'Authorization':'Bearer '+c.token}});if(gr.ok)ghFileSha=(await gr.json()).sha;else ghFileSha=null}catch(e){}const body={message:'Update poker scores via admin',content,branch:c.branch};if(ghFileSha)body.sha=ghFileSha;try{const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}`,{method:'PUT',headers:{'Authorization':'Bearer '+c.token,'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.ok||r.status===201){ghFileSha=(await r.json()).content.sha;return true}const err=await r.json();showToast('GitHub: '+(err.message||'Error'),true);return false}catch(e){showToast('Network error',true);return false}}
 
 // ===== SCORE TABLE =====
 function renderScoreTable(){const ns=getAllPlayerNames();document.getElementById('scoreTableBody').innerHTML=ns.map(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_');return`<tr><td><input type="checkbox" id="chk_${s}" onchange="toggleRow('${s}')"></td><td><span class="pname">${n}</span></td><td><input type="number" id="score_${s}" min="0" value="0" disabled></td><td><input type="number" id="hands_${s}" min="1" value="1" disabled></td></tr>`}).join('')}
 function toggleRow(s){const on=document.getElementById('chk_'+s).checked;document.getElementById('score_'+s).disabled=!on;document.getElementById('hands_'+s).disabled=!on;if(on)document.getElementById('score_'+s).focus()}
 function addNewPlayer(){const i=document.getElementById('newPlayerName'),n=i.value.trim();if(!n)return;if(getAllPlayerNames().map(x=>x.toLowerCase()).includes(n.toLowerCase())){showToast('Player exists',true);return}customPlayers.push(n);i.value='';renderScoreTable();showToast(n+' added')}
-async function submitGame(){const gid=parseInt(document.getElementById('adminGameId').value),date=document.getElementById('adminGameDate').value.trim(),hands=parseInt(document.getElementById('adminGameHands').value);if(!gid||!date||!hands){showToast('Fill all fields',true);return}if(getAllGames().find(g=>g.id===gid)){showToast('Game '+gid+' exists',true);return}const players=[];getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk&&chk.checked)players.push({name:n,handsPlayed:parseInt(document.getElementById('hands_'+s).value)||1,score:parseInt(document.getElementById('score_'+s).value)||0})});if(!players.length){showToast('Select players',true);return}addedGames.push({id:gid,date,hands,players});const btn=document.getElementById('saveBtn'),st=document.getElementById('saveStatus');btn.disabled=true;st.innerHTML='<span class="spinner"></span> Saving...';const ok=await saveToGitHub();btn.disabled=false;if(ok){st.innerHTML='<span class="gh-status ok">Saved!</span>';setTimeout(()=>st.innerHTML='',5000);clearForm();refreshAll();showToast('Game '+gid+' saved!')}else{addedGames.pop();st.innerHTML=''}}
+
+// ===== EDIT GAME =====
+function editGame(gameId){
+  const game=getAllGames().find(g=>g.id===gameId);if(!game)return;
+  editingGameId=gameId;
+  document.getElementById('formTitle').textContent='Edit Game '+gameId;
+  document.getElementById('saveBtn').textContent='Update Game on GitHub';
+  document.getElementById('cancelEditBtn').style.display='';
+  document.getElementById('adminGameId').value=gameId;
+  document.getElementById('adminGameId').disabled=true;
+  document.getElementById('adminGameDate').value=game.date;
+  document.getElementById('adminGameHands').value=game.hands;
+  renderScoreTable();
+  game.players.forEach(p=>{
+    const s=p.name.replace(/[^a-zA-Z0-9]/g,'_');
+    const chk=document.getElementById('chk_'+s);
+    if(chk){chk.checked=true;document.getElementById('score_'+s).disabled=false;document.getElementById('score_'+s).value=p.score;document.getElementById('hands_'+s).disabled=false;document.getElementById('hands_'+s).value=p.handsPlayed}
+  });
+  document.getElementById('formTitle').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function cancelEdit(){
+  editingGameId=null;
+  document.getElementById('formTitle').textContent='Add New Game';
+  document.getElementById('saveBtn').textContent='Save Game to GitHub';
+  document.getElementById('cancelEditBtn').style.display='none';
+  document.getElementById('adminGameId').disabled=false;
+  clearForm();
+}
+
+async function submitGame(){
+  const gid=parseInt(document.getElementById('adminGameId').value),date=document.getElementById('adminGameDate').value.trim(),hands=parseInt(document.getElementById('adminGameHands').value);
+  if(!gid||!date||!hands){showToast('Fill all fields',true);return}
+
+  // Collect players
+  const players=[];
+  getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk&&chk.checked)players.push({name:n,handsPlayed:parseInt(document.getElementById('hands_'+s).value)||1,score:parseInt(document.getElementById('score_'+s).value)||0})});
+  if(!players.length){showToast('Select players',true);return}
+
+  const isEdit=editingGameId!==null;
+
+  if(isEdit){
+    // Editing existing game
+    const isBase=BASE_GAMES.some(g=>g.id===editingGameId);
+    if(isBase){
+      editedBaseGames[editingGameId]={date,hands,players};
+    } else {
+      const idx=addedGames.findIndex(g=>g.id===editingGameId);
+      if(idx>=0){addedGames[idx]={...addedGames[idx],date,hands,players}}
+    }
+  } else {
+    // Adding new game
+    if(getAllGames().find(g=>g.id===gid)){showToast('Game '+gid+' exists',true);return}
+    addedGames.push({id:gid,date,hands,players});
+  }
+
+  const btn=document.getElementById('saveBtn'),st=document.getElementById('saveStatus');
+  btn.disabled=true;st.innerHTML='<span class="spinner"></span> Saving...';
+  const ok=await saveToGitHub();btn.disabled=false;
+
+  if(ok){
+    st.innerHTML='<span class="gh-status ok">Saved!</span>';setTimeout(()=>st.innerHTML='',5000);
+    cancelEdit();refreshAll();
+    showToast(isEdit?'Game '+gid+' updated!':'Game '+gid+' saved!');
+  } else {
+    if(!isEdit)addedGames.pop();
+    st.innerHTML='';
+  }
+}
+
 async function deleteAddedGame(idx){if(!confirm('Delete Game '+addedGames[idx].id+'?'))return;addedGames.splice(idx,1);if(await saveToGitHub()){refreshAll();showToast('Deleted')}else showToast('Failed',true)}
-function clearForm(){document.getElementById('adminGameId').value='';document.getElementById('adminGameDate').value='';document.getElementById('adminGameHands').value='';getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk){chk.checked=false;document.getElementById('score_'+s).value=0;document.getElementById('score_'+s).disabled=true;document.getElementById('hands_'+s).value=1;document.getElementById('hands_'+s).disabled=true}})}
-function renderManagedGames(){const el=document.getElementById('managedGames');if(!addedGames.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text4);font-size:13px">No admin-added games yet.</div>';return}el.innerHTML=addedGames.map((g,i)=>`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${g.id} — ${g.date}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(g.players.reduce((t,p)=>t+p.score,0))}</div></div><button class="btn btn-sm btn-red" onclick="deleteAddedGame(${i})">Delete</button></div>`).join('')}
+
+function clearForm(){
+  document.getElementById('adminGameId').value='';document.getElementById('adminGameDate').value='';document.getElementById('adminGameHands').value='';
+  getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk){chk.checked=false;document.getElementById('score_'+s).value=0;document.getElementById('score_'+s).disabled=true;document.getElementById('hands_'+s).value=1;document.getElementById('hands_'+s).disabled=true}});
+}
+
+function renderAllGames(){
+  const gs=getAllGames(),el=document.getElementById('allGamesList');
+  el.innerHTML=gs.map(g=>{
+    const pot=g.players.reduce((t,p)=>t+p.score,0);
+    const isEdited=editedBaseGames[g.id]?'<span style="color:var(--gold);font-size:11px;margin-left:6px">(edited)</span>':'';
+    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${g.id} — ${g.date}${isEdited}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(pot)}</div></div><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button></div>`;
+  }).join('');
+}
+
+function renderManagedGames(){
+  const el=document.getElementById('managedGames');
+  if(!addedGames.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text4);font-size:13px">No admin-added games yet.</div>';return}
+  el.innerHTML=addedGames.map((g,i)=>`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${g.id} — ${g.date}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(g.players.reduce((t,p)=>t+p.score,0))}</div></div><div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button><button class="btn btn-sm btn-red" onclick="deleteAddedGame(${i})">Delete</button></div></div>`).join('');
+}
 
 function showToast(m,e){const t=document.getElementById('toast');t.textContent=m;t.className='toast show'+(e?' error':'');setTimeout(()=>t.className='toast',3000)}
-function refreshAll(){renderMonthBar();renderHero();renderTitles();renderLeaderboard();renderEfficiency();renderGames();renderPlayers();renderAwards();if(isAdminMode){renderScoreTable();renderManagedGames()}}
+function refreshAll(){renderMonthBar();renderHero();renderTitles();renderLeaderboard();renderEfficiency();renderGames();renderPlayers();renderAwards();if(isAdminMode){renderScoreTable();renderAllGames();renderManagedGames()}}
 
 // ===== INIT =====
 loadSharedData();
