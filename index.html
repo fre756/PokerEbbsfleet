@@ -164,7 +164,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px">
         <h3 style="font-size:16px;font-weight:700;margin-bottom:4px">Manage Added Games</h3>
-        <p style="font-size:12px;color:var(--text4);margin-bottom:16px">Games added via admin. Base games (1–21) cannot be deleted.</p>
+        <p style="font-size:12px;color:var(--text4);margin-bottom:16px">Games added via admin. Base games (1–23) cannot be deleted.</p>
         <div id="managedGames"></div>
       </div>
       <div style="margin-top:16px;text-align:right"><button class="btn btn-sm btn-ghost" onclick="adminLogout()" style="color:var(--red)">Exit Admin</button></div>
@@ -200,7 +200,9 @@ const BASE_GAMES=[
 {id:18,date:"27/03/2026",hands:7,players:[{name:"Jags",handsPlayed:2,score:1480},{name:"Mahesh",handsPlayed:1,score:1000},{name:"Pradeep",handsPlayed:2,score:0},{name:"Prakash",handsPlayed:1,score:1820},{name:"Rohan",handsPlayed:1,score:2700}]},
 {id:19,date:"27/03/2026",hands:15,players:[{name:"Jags",handsPlayed:3,score:2945},{name:"Mahesh",handsPlayed:2,score:600},{name:"Mahi",handsPlayed:1,score:420},{name:"Pradeep",handsPlayed:1,score:6500},{name:"Prakash",handsPlayed:3,score:600},{name:"Rohan",handsPlayed:3,score:2350},{name:"Srikanth",handsPlayed:1,score:1585},{name:"Venki",handsPlayed:1,score:0}]},
 {id:20,date:"28/03/2026",hands:24,players:[{name:"Bala",handsPlayed:1,score:1280},{name:"Ganesh",handsPlayed:2,score:900},{name:"Jags",handsPlayed:1,score:4450},{name:"Mahesh",handsPlayed:6,score:7400},{name:"Mahi",handsPlayed:2,score:1330},{name:"Nivas",handsPlayed:1,score:1465},{name:"Pradeep",handsPlayed:2,score:5000},{name:"Prakash",handsPlayed:3,score:1525},{name:"Rohan",handsPlayed:3,score:0},{name:"Srikanth",handsPlayed:1,score:650},{name:"Suri",handsPlayed:2,score:0}]},
-{id:21,date:"29/03/2026",hands:18,players:[{name:"Bala",handsPlayed:1,score:2680},{name:"Ganesh",handsPlayed:1,score:3000},{name:"Jags",handsPlayed:5,score:0},{name:"Mahesh",handsPlayed:1,score:3660},{name:"Pradeep",handsPlayed:1,score:0},{name:"Rohan",handsPlayed:2,score:800},{name:"Srikanth",handsPlayed:2,score:860},{name:"Sundeep",handsPlayed:1,score:3400},{name:"Suri",handsPlayed:2,score:0},{name:"Venki",handsPlayed:2,score:3600}]}
+{id:21,date:"29/03/2026",hands:18,players:[{name:"Bala",handsPlayed:1,score:2680},{name:"Ganesh",handsPlayed:1,score:3000},{name:"Jags",handsPlayed:5,score:0},{name:"Mahesh",handsPlayed:1,score:3660},{name:"Pradeep",handsPlayed:1,score:0},{name:"Rohan",handsPlayed:2,score:800},{name:"Srikanth",handsPlayed:2,score:860},{name:"Sundeep",handsPlayed:1,score:3400},{name:"Suri",handsPlayed:2,score:0},{name:"Venki",handsPlayed:2,score:3600}]},
+{id:22,date:"30/03/2026",hands:15,players:[{name:"Bala",handsPlayed:1,score:0},{name:"Ganesh",handsPlayed:2,score:900},{name:"Jags",handsPlayed:1,score:2400},{name:"Mahesh",handsPlayed:2,score:3530},{name:"Pradeep",handsPlayed:3,score:0},{name:"Rohan",handsPlayed:1,score:125},{name:"Srikanth",handsPlayed:2,score:2235},{name:"Suresh",handsPlayed:1,score:2650},{name:"Suri",handsPlayed:1,score:1675},{name:"Venki",handsPlayed:1,score:1485}]},
+{id:23,date:"31/03/2026",hands:24,players:[{name:"Bala",handsPlayed:1,score:3290},{name:"Chaithu",handsPlayed:1,score:3960},{name:"Ganesh",handsPlayed:4,score:3500},{name:"Jags",handsPlayed:1,score:1320},{name:"Mahesh",handsPlayed:1,score:3000},{name:"Mahi",handsPlayed:1,score:2540},{name:"Pradeep",handsPlayed:5,score:4885},{name:"Rohan",handsPlayed:1,score:0},{name:"Srikanth",handsPlayed:3,score:630},{name:"Suresh",handsPlayed:3,score:0},{name:"Venki",handsPlayed:3,score:885}]}
 ];
 
 // ===== STATE =====
@@ -302,7 +304,7 @@ function renderHero(){
 function periodLabel(){return selectedMonth==='all'?'All Time':monthLabel(getEffectiveMonthKey())}
 function renderTitles(){
   const p=periodLabel(),isAll=selectedMonth==='all';
-  document.getElementById('lbTitle').innerHTML=`<div class="section-title">${p} Leaderboard</div><div class="section-sub">${isAll?'Cumulative scores across all games':'Monthly scores · Result +/- resets each month (1,000 buy-in per hand)'}</div>`;
+  document.getElementById('lbTitle').innerHTML=`<div class="section-title">${p} Leaderboard</div><div class="section-sub">${isAll?'Ranked by overall Result +/- (score minus 1,000 buy-in per hand)':'Monthly Result +/- resets each month · Ranked by profit/loss'}</div>`;
   document.getElementById('effTitle').innerHTML=`<div class="section-title">${p} Efficiency</div><div class="section-sub">Average score per hand — min 2 hands to qualify</div>`;
   document.getElementById('gTitle').innerHTML=`<div class="section-title">${p} Games</div><div class="section-sub">Individual results for each session</div>`;
   document.getElementById('pTitle').innerHTML=`<div class="section-title">${p} Players</div><div class="section-sub">Stats and game history</div>`;
@@ -311,9 +313,10 @@ function renderTitles(){
 
 // ===== RENDERS =====
 function renderLeaderboard(){
-  const a=getAgg(),s=[...a].sort((x,y)=>y.totalScore-x.totalScore),el=document.getElementById('leaderboard'),mx=s[0]?.totalScore||1;
+  const a=getAgg(),s=[...a].sort((x,y)=>y.totalResult-x.totalResult),el=document.getElementById('leaderboard');
   if(!s.length){el.innerHTML='<div class="empty-state">No games this period yet.</div>';return}
-  el.innerHTML=s.map((p,i)=>{const c=i===0?'top1':i===1?'top2':i===2?'top3':'',rk=medal(i)||`<span class="rank-num">${i+1}</span>`,pct=((p.totalScore/mx)*100).toFixed(1);return`<div class="lb-row ${c}"><div class="rank">${rk}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${p.games} game${p.games>1?'s':''} · ${p.totalHands} hands · Best: ${fmt(p.bestGame)}</div><div class="bar-track"><div class="bar-fill ${i<3?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="player-score score-gold">${fmt(p.totalScore)}</div><div class="player-score" style="color:${resClr(p.totalResult)};min-width:80px;font-size:14px">${fmtRes(p.totalResult)}</div></div>`}).join('')}
+  const maxR=Math.max(...s.map(p=>Math.abs(p.totalResult)))||1;
+  el.innerHTML=s.map((p,i)=>{const c=i===0?'top1':i===1?'top2':i===2?'top3':'',rk=medal(i)||`<span class="rank-num">${i+1}</span>`,pct=(Math.abs(p.totalResult)/maxR*100).toFixed(1);return`<div class="lb-row ${c}"><div class="rank">${rk}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${p.games} game${p.games>1?'s':''} · ${p.totalHands} hands · Score: ${fmt(p.totalScore)}</div><div class="bar-track"><div class="bar-fill ${p.totalResult>=0?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="player-score" style="color:${resClr(p.totalResult)};min-width:90px;font-size:16px">${fmtRes(p.totalResult)}</div></div>`}).join('')}
 
 function renderEfficiency(){
   const a=getAgg(),s=[...a].filter(p=>p.totalHands>=2).sort((x,y)=>y.avgPerHand-x.avgPerHand),el=document.getElementById('efficiency'),mx=s[0]?.avgPerHand||1;
@@ -323,31 +326,37 @@ function renderEfficiency(){
 function renderGames(){
   const gs=getFilteredGames(),el=document.getElementById('games');
   if(!gs.length){el.innerHTML='<div class="empty-state">No games this period yet.</div>';return}
-  el.innerHTML=gs.map(g=>{const s=[...g.players].sort((a,b)=>b.score-a.score),mx=s[0]?.score||1,pot=g.players.reduce((t,p)=>t+p.score,0);return`<div class="game-card"><div class="game-header"><div><span class="game-id">Game <span>${g.id}</span></span><span class="game-date">${g.date}</span></div><div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Pot: ${fmt(pot)}</div></div>${s.map((p,i)=>{const pct=mx>0?((p.score/mx)*100).toFixed(1):'0',res=p.score-(p.handsPlayed*1000);return`<div class="game-row"><div class="game-rank ${i===0?'first':''}">${i+1}</div><div class="game-name ${p.score===0?'bust':''}">${p.name}</div><div class="game-bar"><div class="bar-track"><div class="bar-fill ${i===0?'bar-gold':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div><div class="game-hands">(${p.handsPlayed})</div><div style="width:65px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${resClr(res)}">${fmtRes(res)}</div></div>`}).join('')}</div>`}).join('')}
+  el.innerHTML=gs.map(g=>{const s=[...g.players].map(p=>({...p,result:p.score-(p.handsPlayed*1000)})).sort((a,b)=>b.result-a.result),mx=Math.max(...s.map(p=>Math.abs(p.result)))||1,pot=g.players.reduce((t,p)=>t+p.score,0);return`<div class="game-card"><div class="game-header"><div><span class="game-id">Game <span>${g.id}</span></span><span class="game-date">${g.date}</span></div><div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Pot: ${fmt(pot)}</div></div>${s.map((p,i)=>{const pct=(Math.abs(p.result)/mx*100).toFixed(1);return`<div class="game-row"><div class="game-rank ${i===0?'first':''}">${i+1}</div><div class="game-name ${p.score===0?'bust':''}">${p.name}</div><div class="game-bar"><div class="bar-track"><div class="bar-fill ${p.result>=0?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div><div class="game-hands">(${p.handsPlayed})</div><div style="width:65px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${resClr(p.result)}">${fmtRes(p.result)}</div></div>`}).join('')}</div>`}).join('')}
 
 function renderPlayers(){
-  const a=getAgg(),s=[...a].sort((x,y)=>y.totalScore-x.totalScore),el=document.getElementById('players');
+  const a=getAgg(),s=[...a].sort((x,y)=>y.totalResult-x.totalResult),el=document.getElementById('players');
   if(!s.length){el.innerHTML='<div class="empty-state">No players this period yet.</div>';return}
-  el.innerHTML=s.map((p,r)=>{const bc=r<3?'var(--gold)':'var(--text4)',bb=r<3?'var(--gold-dim)':'var(--surface2)';return`<div class="player-card"><div class="pc-header"><div class="pc-name">${medal(r)?medal(r)+' ':''}${p.name}</div><div class="pc-badge" style="color:${bc};background:${bb}">Rank #${r+1}</div></div><div class="pc-stats"><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.totalScore)}</div><div class="lbl">Total Score</div></div><div class="pc-stat"><div class="val" style="color:${resClr(p.totalResult)}">${fmtRes(p.totalResult)}</div><div class="lbl">Result +/-</div></div><div class="pc-stat"><div class="val">${p.games}</div><div class="lbl">Games</div></div><div class="pc-stat"><div class="val">${p.totalHands}</div><div class="lbl">Hands</div></div><div class="pc-stat"><div class="val" style="color:var(--green)">${fmt(p.avgPerHand)}</div><div class="lbl">Avg/Hand</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.bestGame)}</div><div class="lbl">Best</div></div></div><div style="font-size:12px;color:var(--text4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">History</div><div class="pc-games">${p.gameDetails.map(gd=>`<div class="pc-game ${gd.score===0?'bust':''}">G${gd.gameId}: ${gd.score===0?'BUST':fmt(gd.score)} <span style="color:var(--text4)">(${gd.hands}h)</span> <span style="color:${resClr(gd.result)};font-size:11px">${fmtRes(gd.result)}</span></div>`).join('')}</div></div>`}).join('')}
+  el.innerHTML=s.map((p,r)=>{const bc=r<3?'var(--gold)':'var(--text4)',bb=r<3?'var(--gold-dim)':'var(--surface2)';return`<div class="player-card"><div class="pc-header"><div class="pc-name">${medal(r)?medal(r)+' ':''}${p.name}</div><div class="pc-badge" style="color:${bc};background:${bb}">Rank #${r+1}</div></div><div class="pc-stats"><div class="pc-stat"><div class="val" style="color:${resClr(p.totalResult)}">${fmtRes(p.totalResult)}</div><div class="lbl">Result +/-</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.totalScore)}</div><div class="lbl">Total Score</div></div><div class="pc-stat"><div class="val">${p.games}</div><div class="lbl">Games</div></div><div class="pc-stat"><div class="val">${p.totalHands}</div><div class="lbl">Hands</div></div><div class="pc-stat"><div class="val" style="color:var(--green)">${fmt(p.avgPerHand)}</div><div class="lbl">Avg/Hand</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.bestGame)}</div><div class="lbl">Best</div></div></div><div style="font-size:12px;color:var(--text4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">History</div><div class="pc-games">${p.gameDetails.map(gd=>`<div class="pc-game ${gd.score===0?'bust':''}">G${gd.gameId}: ${gd.score===0?'BUST':fmt(gd.score)} <span style="color:var(--text4)">(${gd.hands}h)</span> <span style="color:${resClr(gd.result)};font-size:11px">${fmtRes(gd.result)}</span></div>`).join('')}</div></div>`}).join('')}
 
 function renderAwards(){
   const a=getAgg(),el=document.getElementById('awards');
   if(!a.length){el.innerHTML='<div class="empty-state">No awards this period yet.</div>';return}
-  const bt=[...a].sort((x,y)=>y.totalScore-x.totalScore),be=[...a].filter(p=>p.totalHands>=2).sort((x,y)=>y.avgPerHand-x.avgPerHand),br=[...a].sort((x,y)=>y.totalResult-x.totalResult),gs=getFilteredGames();
+  const br=[...a].sort((x,y)=>y.totalResult-x.totalResult),be=[...a].filter(p=>p.totalHands>=2).sort((x,y)=>y.avgPerHand-x.avgPerHand),gs=getFilteredGames();
+  // Best single-game result (not score)
+  let bestSG={name:'',result:-Infinity,score:0,gid:0};
+  gs.forEach(g=>g.players.forEach(p=>{const r=p.score-(p.handsPlayed*1000);if(r>bestSG.result){bestSG={name:p.name,result:r,score:p.score,gid:g.id}}}));
+  // Highest single-game score
   let hs={name:'',score:0,gid:0};gs.forEach(g=>g.players.forEach(p=>{if(p.score>hs.score)hs={name:p.name,score:p.score,gid:g.id}}));
   let mh={name:'',h:0},bu=[];a.forEach(p=>{if(p.totalHands>mh.h)mh={name:p.name,h:p.totalHands};if(p.zeroGames>0)bu.push({name:p.name,c:p.zeroGames})});
   const nG=gs.length,regs=a.filter(p=>p.games===nG&&nG>1).map(p=>p.name),ones=a.filter(p=>p.games===1&&nG>1).map(p=>p.name);
-  const bigW=br[0],bigL=br[br.length-1];
+  const champ=br[0],loser=br[br.length-1];
+  const profitCount=a.filter(p=>p.totalResult>0).length,lossCount=a.filter(p=>p.totalResult<0).length;
   const st=[
-    {icon:"🏆",label:"Highest Single-Game",value:`${hs.name} — ${fmt(hs.score)} (Game ${hs.gid})`,detail:"Biggest haul"},
-    {icon:"👑",label:"Champion",value:`${bt[0]?.name} — ${fmt(bt[0]?.totalScore)}`,detail:`Leading across ${bt[0]?.games} games`},
-    {icon:"💰",label:"Biggest Winner",value:`${bigW?.name} — ${fmtRes(bigW?.totalResult)}`,detail:`${bigW?.totalHands} buy-ins (${fmt(bigW?.totalHands*1000)} in), ${fmt(bigW?.totalScore)} out`},
-    {icon:"📉",label:"Biggest Loser",value:`${bigL?.name} — ${fmtRes(bigL?.totalResult)}`,detail:`${bigL?.totalHands} buy-ins (${fmt(bigL?.totalHands*1000)} in), ${fmt(bigL?.totalScore)} out`},
+    {icon:"👑",label:"Champion (Best Result)",value:`${champ?.name} — ${fmtRes(champ?.totalResult)}`,detail:`${champ?.totalHands} buy-ins (${fmt(champ?.totalHands*1000)} invested), ${fmt(champ?.totalScore)} returned across ${champ?.games} games`},
+    {icon:"📉",label:"Biggest Loser",value:`${loser?.name} — ${fmtRes(loser?.totalResult)}`,detail:`${loser?.totalHands} buy-ins (${fmt(loser?.totalHands*1000)} invested), ${fmt(loser?.totalScore)} returned across ${loser?.games} games`},
+    {icon:"🎯",label:"Best Single-Game Result",value:`${bestSG.name} — ${fmtRes(bestSG.result)} (Game ${bestSG.gid})`,detail:`Scored ${fmt(bestSG.score)} in one game`},
+    {icon:"🏆",label:"Highest Single-Game Score",value:`${hs.name} — ${fmt(hs.score)} (Game ${hs.gid})`,detail:"Biggest raw haul in a single session"},
+    {icon:"📊",label:"Profit vs Loss",value:`${profitCount} in profit, ${lossCount} in loss`,detail:`Out of ${a.length} players this period`},
   ];
-  if(be.length)st.push({icon:"⚡",label:"Best Efficiency",value:`${be[0]?.name} — ${fmt(be[0]?.avgPerHand)}/hand`,detail:`${be[0]?.totalHands} hands`});
-  st.push({icon:"🃏",label:"Most Hands",value:`${mh.name} (${mh.h})`,detail:"Iron man"});
+  if(be.length)st.push({icon:"⚡",label:"Best Efficiency",value:`${be[0]?.name} — ${fmt(be[0]?.avgPerHand)}/hand`,detail:`${be[0]?.totalHands} hands, result: ${fmtRes(be[0]?.totalResult)}`});
+  st.push({icon:"🃏",label:"Most Hands Played",value:`${mh.name} (${mh.h})`,detail:"Iron man of the table"});
   if(bu.length)st.push({icon:"💀",label:"Busted Out",value:bu.map(b=>`${b.name}${b.c>1?' (×'+b.c+')':''}`).join(', '),detail:"Zero score games"});
-  if(regs.length)st.push({icon:"📅",label:`All ${nG} Games`,value:regs.join(', '),detail:"Every session"});
+  if(regs.length)st.push({icon:"📅",label:`All ${nG} Games`,value:regs.join(', '),detail:"Every single session"});
   if(ones.length)st.push({icon:"👻",label:"One-Timers",value:ones.join(', '),detail:"Appeared once"});
   el.innerHTML=st.map(s=>`<div class="fun-card"><div class="fun-top"><div class="fun-icon">${s.icon}</div><div class="fun-label">${s.label}</div></div><div class="fun-value">${s.value}</div><div class="fun-detail">${s.detail}</div></div>`).join('');
 }
