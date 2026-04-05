@@ -16,7 +16,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .hero-suits{font-size:14px;letter-spacing:12px;color:var(--gold);opacity:0.5;margin-bottom:12px}
 .hero h1{font-size:clamp(32px,6vw,52px);font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#fff 0%,#f59e0b 50%,#ef4444 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1}
 .hero-sub{color:var(--text3);font-size:14px;margin-top:8px;letter-spacing:0.5px}
-.month-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 16px;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.month-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 16px;margin-bottom:16px;flex-wrap:wrap;gap:8px;position:relative;z-index:150}
 .mb-info{display:flex;align-items:center;gap:10px}
 .mb-icon{font-size:18px}
 .mb-label{font-size:15px;font-weight:700}
@@ -24,10 +24,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .mb-meta{font-size:11px;color:var(--text4)}
 .mb-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;position:relative;white-space:nowrap}
 .mb-btn:hover{border-color:var(--gold-glow)}
-.mb-drop{position:absolute;top:100%;right:0;margin-top:6px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:6px;z-index:50;min-width:240px;box-shadow:0 8px 32px rgba(0,0,0,0.5);display:none}
+.mb-drop{position:absolute;top:100%;right:0;margin-top:6px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:6px;z-index:200;min-width:240px;max-height:320px;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.5);display:none;outline:none}
 .mb-drop.show{display:block}
 .mb-di{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 14px;background:transparent;border:none;border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;text-align:left}
-.mb-di:hover{background:rgba(255,255,255,0.03)}
+.mb-di:hover,.mb-di.kb-focus{background:rgba(255,255,255,0.03)}
 .mb-di.sa{color:var(--blue);font-weight:700;background:var(--blue-dim)}
 .mb-di.sm{color:var(--gold);font-weight:700;background:var(--gold-dim)}
 .mb-dv{height:1px;background:var(--border);margin:4px 8px}
@@ -146,7 +146,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
         <h3 style="font-size:16px;font-weight:700;margin-bottom:16px" id="formTitle">Add New Game</h3>
-        <div class="form-row" style="margin-bottom:16px"><div style="flex:1"><label class="form-label">Game Number</label><input type="number" id="adminGameId" class="form-input form-input-sm" min="1"></div><div style="flex:1"><label class="form-label">Date (DD/MM/YYYY)</label><input type="text" id="adminGameDate" class="form-input"></div><div style="flex:1"><label class="form-label">Total Hands</label><input type="number" id="adminGameHands" class="form-input form-input-sm" min="1"></div></div>
+        <div class="form-row" style="margin-bottom:16px"><div style="flex:1"><label class="form-label">Date (DD/MM/YYYY)</label><input type="text" id="adminGameDate" class="form-input" placeholder="e.g. 05/04/2026" oninput="onDateInput()"></div><div style="flex:1"><label class="form-label">Total Hands</label><input type="number" id="adminGameHands" class="form-input form-input-sm" min="1"></div><div style="flex:1"><label class="form-label">Monthly Game #</label><div class="form-input" id="autoGameNum" style="background:var(--surface);color:var(--gold);font-weight:700;cursor:default">—</div></div></div>
+        <p style="font-size:11px;color:var(--text4);margin-top:-12px;margin-bottom:14px">Enter the date first — the game number auto-calculates based on the month.</p>
         <label class="form-label" style="margin-bottom:10px;display:block">Player Scores — tick who participated</label>
         <div style="overflow-x:auto"><table class="score-table"><thead><tr><th style="width:40px"></th><th>Player</th><th style="width:130px">Score</th><th style="width:100px">Hands</th></tr></thead><tbody id="scoreTableBody"></tbody></table></div>
         <div class="add-player-row"><span style="font-size:13px;color:var(--text3)">New player:</span><input type="text" id="newPlayerName" placeholder="Name" onkeydown="if(event.key==='Enter')addNewPlayer()"><button class="btn btn-sm btn-ghost" onclick="addNewPlayer()">+ Add</button></div>
@@ -243,6 +244,29 @@ function getFilteredGames(){
 
 function getEffectiveMonthKey(){return selectedMonth==='current'?currentMonthKey():selectedMonth}
 
+// Monthly game numbering
+function gamesInMonth(mk){return getAllGames().filter(g=>gameMonthKey(g)===mk)}
+function monthlyNum(game){
+  const mk=gameMonthKey(game);
+  const mg=gamesInMonth(mk).sort((a,b)=>{const da=parseDate(a.date),db=parseDate(b.date);return(da.year*10000+da.month*100+da.day)-(db.year*10000+db.month*100+db.day)||a.id-b.id});
+  return mg.findIndex(g=>g.id===game.id)+1;
+}
+function nextMonthlyNum(mk){return gamesInMonth(mk).length+1}
+function nextInternalId(){return Math.max(0,...getAllGames().map(g=>g.id))+1}
+function monthKeyFromDateStr(d){try{const p=d.split('/');if(p.length===3)return+p[2]+'-'+String(+p[1]).padStart(2,'0')}catch(e){}return null}
+
+// Auto-update game number when date changes
+function onDateInput(){
+  const d=document.getElementById('adminGameDate').value.trim();
+  const el=document.getElementById('autoGameNum');
+  const mk=monthKeyFromDateStr(d);
+  if(mk){
+    const editing=editingGameId!==null;
+    const n=editing?monthlyNum(getAllGames().find(g=>g.id===editingGameId)):nextMonthlyNum(mk);
+    el.textContent='Game '+n+' of '+monthLabel(mk);
+  } else {el.textContent='—'}
+}
+
 // ===== LOAD =====
 async function loadSharedData(){try{const r=await fetch(DATA_PATH+'?t='+Date.now());if(r.ok){const d=await r.json();addedGames=d.addedGames||[];customPlayers=d.customPlayers||[];editedBaseGames=d.editedBaseGames||{}}}catch(e){}refreshAll()}
 
@@ -258,13 +282,13 @@ function getAllPlayerNames(){const n=new Set();getAllGames().forEach(g=>g.player
 
 function getAgg(games){
   if(!games)games=getFilteredGames();
-  const m={};
-  games.forEach(g=>{g.players.forEach(p=>{
+  const m={};const allG=getAllGames();
+  games.forEach(g=>{const mn=monthlyNum(g);g.players.forEach(p=>{
     if(!m[p.name])m[p.name]={name:p.name,totalScore:0,totalHands:0,games:0,scores:[],bestGame:0,zeroGames:0,gameDetails:[],totalResult:0};
     const res=p.score-(p.handsPlayed*1000);
     m[p.name].totalScore+=p.score;m[p.name].totalHands+=p.handsPlayed;m[p.name].totalResult+=res;
     m[p.name].games+=1;m[p.name].scores.push(p.score);
-    m[p.name].gameDetails.push({gameId:g.id,date:g.date,score:p.score,hands:p.handsPlayed,result:res});
+    m[p.name].gameDetails.push({gameId:g.id,gameNum:mn,date:g.date,score:p.score,hands:p.handsPlayed,result:res});
     if(p.score>m[p.name].bestGame)m[p.name].bestGame=p.score;
     if(p.score===0)m[p.name].zeroGames+=1;
   })});
@@ -278,10 +302,27 @@ function resClr(n){return n>0?'var(--green)':n<0?'var(--red)':'var(--text4)'}
 function showTab(i){document.querySelectorAll('.section').forEach((s,x)=>s.classList.toggle('active',x===i));document.querySelectorAll('.nav button').forEach((b,x)=>b.classList.toggle('active',x===i))}
 
 // ===== MONTH BAR =====
-function toggleDrop(){document.getElementById('mbDrop').classList.toggle('show')}
-document.addEventListener('click',e=>{if(!e.target.closest('.mb-btn')&&!e.target.closest('.mb-drop'))document.getElementById('mbDrop').classList.remove('show')});
+let kbIdx=-1;
+function toggleDrop(){
+  const d=document.getElementById('mbDrop');
+  const opening=!d.classList.contains('show');
+  d.classList.toggle('show');
+  if(opening){kbIdx=-1;d.setAttribute('tabindex','-1');d.focus()}
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.mb-btn')&&!e.target.closest('.mb-drop')){document.getElementById('mbDrop').classList.remove('show');kbIdx=-1}});
+document.addEventListener('keydown',e=>{
+  const d=document.getElementById('mbDrop');
+  if(!d.classList.contains('show'))return;
+  const items=[...d.querySelectorAll('.mb-di')];
+  if(!items.length)return;
+  if(e.key==='ArrowDown'){e.preventDefault();kbIdx=Math.min(kbIdx+1,items.length-1);highlightKb(items)}
+  else if(e.key==='ArrowUp'){e.preventDefault();kbIdx=Math.max(kbIdx-1,0);highlightKb(items)}
+  else if(e.key==='Enter'&&kbIdx>=0){e.preventDefault();items[kbIdx].click()}
+  else if(e.key==='Escape'){d.classList.remove('show');kbIdx=-1}
+});
+function highlightKb(items){items.forEach((it,i)=>{it.classList.toggle('kb-focus',i===kbIdx)});if(kbIdx>=0)items[kbIdx].scrollIntoView({block:'nearest'})}
 
-function selectMonth(k){selectedMonth=k;document.getElementById('mbDrop').classList.remove('show');refreshAll()}
+function selectMonth(k){selectedMonth=k;document.getElementById('mbDrop').classList.remove('show');kbIdx=-1;refreshAll()}
 
 function renderMonthBar(){
   const months=getMonths();const isAll=selectedMonth==='all';const ek=getEffectiveMonthKey();
@@ -338,22 +379,22 @@ function renderEfficiency(){
 function renderGames(){
   const gs=getFilteredGames(),el=document.getElementById('games');
   if(!gs.length){el.innerHTML='<div class="empty-state">No games this period yet.</div>';return}
-  el.innerHTML=gs.map(g=>{const s=[...g.players].map(p=>({...p,result:p.score-(p.handsPlayed*1000)})).sort((a,b)=>b.result-a.result),mx=Math.max(...s.map(p=>Math.abs(p.result)))||1,pot=g.players.reduce((t,p)=>t+p.score,0);return`<div class="game-card"><div class="game-header"><div><span class="game-id">Game <span>${g.id}</span></span><span class="game-date">${g.date}</span></div><div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Pot: ${fmt(pot)}</div></div>${s.map((p,i)=>{const pct=(Math.abs(p.result)/mx*100).toFixed(1);return`<div class="game-row"><div class="game-rank ${i===0?'first':''}">${i+1}</div><div class="game-name ${p.score===0?'bust':''}">${p.name}</div><div class="game-bar"><div class="bar-track"><div class="bar-fill ${p.result>=0?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div><div class="game-hands">(${p.handsPlayed})</div><div style="width:65px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${resClr(p.result)}">${fmtRes(p.result)}</div></div>`}).join('')}</div>`}).join('')}
+  el.innerHTML=gs.map(g=>{const s=[...g.players].map(p=>({...p,result:p.score-(p.handsPlayed*1000)})).sort((a,b)=>b.result-a.result),mx=Math.max(...s.map(p=>Math.abs(p.result)))||1,pot=g.players.reduce((t,p)=>t+p.score,0),mn=monthlyNum(g);return`<div class="game-card"><div class="game-header"><div><span class="game-id">Game <span>${mn}</span></span><span class="game-date">${g.date}</span></div><div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Pot: ${fmt(pot)}</div></div>${s.map((p,i)=>{const pct=(Math.abs(p.result)/mx*100).toFixed(1);return`<div class="game-row"><div class="game-rank ${i===0?'first':''}">${i+1}</div><div class="game-name ${p.score===0?'bust':''}">${p.name}</div><div class="game-bar"><div class="bar-track"><div class="bar-fill ${p.result>=0?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div><div class="game-hands">(${p.handsPlayed})</div><div style="width:65px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${resClr(p.result)}">${fmtRes(p.result)}</div></div>`}).join('')}</div>`}).join('')}
 
 function renderPlayers(){
   const a=getAgg(),s=[...a].sort((x,y)=>y.totalResult-x.totalResult),el=document.getElementById('players');
   if(!s.length){el.innerHTML='<div class="empty-state">No players this period yet.</div>';return}
-  el.innerHTML=s.map((p,r)=>{const bc=r<3?'var(--gold)':'var(--text4)',bb=r<3?'var(--gold-dim)':'var(--surface2)';return`<div class="player-card"><div class="pc-header"><div class="pc-name">${medal(r)?medal(r)+' ':''}${p.name}</div><div class="pc-badge" style="color:${bc};background:${bb}">Rank #${r+1}</div></div><div class="pc-stats"><div class="pc-stat"><div class="val" style="color:${resClr(p.totalResult)}">${fmtRes(p.totalResult)}</div><div class="lbl">Result +/-</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.totalScore)}</div><div class="lbl">Total Score</div></div><div class="pc-stat"><div class="val">${p.games}</div><div class="lbl">Games</div></div><div class="pc-stat"><div class="val">${p.totalHands}</div><div class="lbl">Hands</div></div><div class="pc-stat"><div class="val" style="color:var(--green)">${fmt(p.avgPerHand)}</div><div class="lbl">Avg/Hand</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.bestGame)}</div><div class="lbl">Best</div></div></div><div style="font-size:12px;color:var(--text4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">History</div><div class="pc-games">${p.gameDetails.map(gd=>`<div class="pc-game ${gd.score===0?'bust':''}">G${gd.gameId}: ${gd.score===0?'BUST':fmt(gd.score)} <span style="color:var(--text4)">(${gd.hands}h)</span> <span style="color:${resClr(gd.result)};font-size:11px">${fmtRes(gd.result)}</span></div>`).join('')}</div></div>`}).join('')}
+  el.innerHTML=s.map((p,r)=>{const bc=r<3?'var(--gold)':'var(--text4)',bb=r<3?'var(--gold-dim)':'var(--surface2)';return`<div class="player-card"><div class="pc-header"><div class="pc-name">${medal(r)?medal(r)+' ':''}${p.name}</div><div class="pc-badge" style="color:${bc};background:${bb}">Rank #${r+1}</div></div><div class="pc-stats"><div class="pc-stat"><div class="val" style="color:${resClr(p.totalResult)}">${fmtRes(p.totalResult)}</div><div class="lbl">Result +/-</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.totalScore)}</div><div class="lbl">Total Score</div></div><div class="pc-stat"><div class="val">${p.games}</div><div class="lbl">Games</div></div><div class="pc-stat"><div class="val">${p.totalHands}</div><div class="lbl">Hands</div></div><div class="pc-stat"><div class="val" style="color:var(--green)">${fmt(p.avgPerHand)}</div><div class="lbl">Avg/Hand</div></div><div class="pc-stat"><div class="val" style="color:var(--gold)">${fmt(p.bestGame)}</div><div class="lbl">Best</div></div></div><div style="font-size:12px;color:var(--text4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px">History</div><div class="pc-games">${p.gameDetails.map(gd=>`<div class="pc-game ${gd.score===0?'bust':''}">G${gd.gameNum}: ${gd.score===0?'BUST':fmt(gd.score)} <span style="color:var(--text4)">(${gd.hands}h)</span> <span style="color:${resClr(gd.result)};font-size:11px">${fmtRes(gd.result)}</span></div>`).join('')}</div></div>`}).join('')}
 
 function renderAwards(){
   const a=getAgg(),el=document.getElementById('awards');
   if(!a.length){el.innerHTML='<div class="empty-state">No awards this period yet.</div>';return}
   const br=[...a].sort((x,y)=>y.totalResult-x.totalResult),be=[...a].filter(p=>p.totalHands>=2).sort((x,y)=>y.avgPerHand-x.avgPerHand),gs=getFilteredGames();
   // Best single-game result (not score)
-  let bestSG={name:'',result:-Infinity,score:0,gid:0};
-  gs.forEach(g=>g.players.forEach(p=>{const r=p.score-(p.handsPlayed*1000);if(r>bestSG.result){bestSG={name:p.name,result:r,score:p.score,gid:g.id}}}));
+  let bestSG={name:'',result:-Infinity,score:0,gnum:0};
+  gs.forEach(g=>{const mn=monthlyNum(g);g.players.forEach(p=>{const r=p.score-(p.handsPlayed*1000);if(r>bestSG.result){bestSG={name:p.name,result:r,score:p.score,gnum:mn}}})});
   // Highest single-game score
-  let hs={name:'',score:0,gid:0};gs.forEach(g=>g.players.forEach(p=>{if(p.score>hs.score)hs={name:p.name,score:p.score,gid:g.id}}));
+  let hs={name:'',score:0,gnum:0};gs.forEach(g=>{const mn=monthlyNum(g);g.players.forEach(p=>{if(p.score>hs.score)hs={name:p.name,score:p.score,gnum:mn}})});
   let mh={name:'',h:0},bu=[];a.forEach(p=>{if(p.totalHands>mh.h)mh={name:p.name,h:p.totalHands};if(p.zeroGames>0)bu.push({name:p.name,c:p.zeroGames})});
   const nG=gs.length,regs=a.filter(p=>p.games===nG&&nG>1).map(p=>p.name),ones=a.filter(p=>p.games===1&&nG>1).map(p=>p.name);
   const champ=br[0],loser=br[br.length-1];
@@ -361,8 +402,8 @@ function renderAwards(){
   const st=[
     {icon:"👑",label:"Champion (Best Result)",value:`${champ?.name} — ${fmtRes(champ?.totalResult)}`,detail:`${champ?.totalHands} buy-ins (${fmt(champ?.totalHands*1000)} invested), ${fmt(champ?.totalScore)} returned across ${champ?.games} games`},
     {icon:"📉",label:"Biggest Loser",value:`${loser?.name} — ${fmtRes(loser?.totalResult)}`,detail:`${loser?.totalHands} buy-ins (${fmt(loser?.totalHands*1000)} invested), ${fmt(loser?.totalScore)} returned across ${loser?.games} games`},
-    {icon:"🎯",label:"Best Single-Game Result",value:`${bestSG.name} — ${fmtRes(bestSG.result)} (Game ${bestSG.gid})`,detail:`Scored ${fmt(bestSG.score)} in one game`},
-    {icon:"🏆",label:"Highest Single-Game Score",value:`${hs.name} — ${fmt(hs.score)} (Game ${hs.gid})`,detail:"Biggest raw haul in a single session"},
+    {icon:"🎯",label:"Best Single-Game Result",value:`${bestSG.name} — ${fmtRes(bestSG.result)} (Game ${bestSG.gnum})`,detail:`Scored ${fmt(bestSG.score)} in one game`},
+    {icon:"🏆",label:"Highest Single-Game Score",value:`${hs.name} — ${fmt(hs.score)} (Game ${hs.gnum})`,detail:"Biggest raw haul in a single session"},
     {icon:"📊",label:"Profit vs Loss",value:`${profitCount} in profit, ${lossCount} in loss`,detail:`Out of ${a.length} players this period`},
   ];
   if(be.length)st.push({icon:"⚡",label:"Best Efficiency",value:`${be[0]?.name} — ${fmt(be[0]?.avgPerHand)}/hand`,detail:`${be[0]?.totalHands} hands, result: ${fmtRes(be[0]?.totalResult)}`});
@@ -397,13 +438,13 @@ function addNewPlayer(){const i=document.getElementById('newPlayerName'),n=i.val
 function editGame(gameId){
   const game=getAllGames().find(g=>g.id===gameId);if(!game)return;
   editingGameId=gameId;
-  document.getElementById('formTitle').textContent='Edit Game '+gameId;
+  const mn=monthlyNum(game);
+  document.getElementById('formTitle').textContent='Edit Game '+mn+' ('+monthLabel(gameMonthKey(game))+')';
   document.getElementById('saveBtn').textContent='Update Game on GitHub';
   document.getElementById('cancelEditBtn').style.display='';
-  document.getElementById('adminGameId').value=gameId;
-  document.getElementById('adminGameId').disabled=true;
   document.getElementById('adminGameDate').value=game.date;
   document.getElementById('adminGameHands').value=game.hands;
+  onDateInput();
   renderScoreTable();
   game.players.forEach(p=>{
     const s=p.name.replace(/[^a-zA-Z0-9]/g,'_');
@@ -418,33 +459,29 @@ function cancelEdit(){
   document.getElementById('formTitle').textContent='Add New Game';
   document.getElementById('saveBtn').textContent='Save Game to GitHub';
   document.getElementById('cancelEditBtn').style.display='none';
-  document.getElementById('adminGameId').disabled=false;
   clearForm();
 }
 
 async function submitGame(){
-  const gid=parseInt(document.getElementById('adminGameId').value),date=document.getElementById('adminGameDate').value.trim(),hands=parseInt(document.getElementById('adminGameHands').value);
-  if(!gid||!date||!hands){showToast('Fill all fields',true);return}
+  const date=document.getElementById('adminGameDate').value.trim(),hands=parseInt(document.getElementById('adminGameHands').value);
+  if(!date||!hands){showToast('Fill date and total hands',true);return}
+  const mk=monthKeyFromDateStr(date);
+  if(!mk){showToast('Invalid date format (DD/MM/YYYY)',true);return}
 
-  // Collect players
   const players=[];
   getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk&&chk.checked)players.push({name:n,handsPlayed:parseInt(document.getElementById('hands_'+s).value)||1,score:parseInt(document.getElementById('score_'+s).value)||0})});
   if(!players.length){showToast('Select players',true);return}
 
   const isEdit=editingGameId!==null;
+  let gid;
 
   if(isEdit){
-    // Editing existing game
-    const isBase=BASE_GAMES.some(g=>g.id===editingGameId);
-    if(isBase){
-      editedBaseGames[editingGameId]={date,hands,players};
-    } else {
-      const idx=addedGames.findIndex(g=>g.id===editingGameId);
-      if(idx>=0){addedGames[idx]={...addedGames[idx],date,hands,players}}
-    }
+    gid=editingGameId;
+    const isBase=BASE_GAMES.some(g=>g.id===gid);
+    if(isBase){editedBaseGames[gid]={date,hands,players}}
+    else{const idx=addedGames.findIndex(g=>g.id===gid);if(idx>=0){addedGames[idx]={...addedGames[idx],date,hands,players}}}
   } else {
-    // Adding new game
-    if(getAllGames().find(g=>g.id===gid)){showToast('Game '+gid+' exists',true);return}
+    gid=nextInternalId();
     addedGames.push({id:gid,date,hands,players});
   }
 
@@ -455,17 +492,24 @@ async function submitGame(){
   if(ok){
     st.innerHTML='<span class="gh-status ok">Saved!</span>';setTimeout(()=>st.innerHTML='',5000);
     cancelEdit();refreshAll();
-    showToast(isEdit?'Game '+gid+' updated!':'Game '+gid+' saved!');
+    const savedGame=getAllGames().find(g=>g.id===gid);
+    const mn=savedGame?monthlyNum(savedGame):0;
+    showToast(isEdit?'Game '+mn+' updated!':'Game '+mn+' saved!');
   } else {
     if(!isEdit)addedGames.pop();
     st.innerHTML='';
   }
 }
 
-async function deleteAddedGame(idx){if(!confirm('Delete Game '+addedGames[idx].id+'?'))return;addedGames.splice(idx,1);if(await saveToGitHub()){refreshAll();showToast('Deleted')}else showToast('Failed',true)}
+async function deleteAddedGame(idx){
+  const g=addedGames[idx];const mn=monthlyNum(g);
+  if(!confirm('Delete Game '+mn+' ('+g.date+')?'))return;
+  addedGames.splice(idx,1);if(await saveToGitHub()){refreshAll();showToast('Deleted')}else showToast('Failed',true);
+}
 
 function clearForm(){
-  document.getElementById('adminGameId').value='';document.getElementById('adminGameDate').value='';document.getElementById('adminGameHands').value='';
+  document.getElementById('adminGameDate').value='';document.getElementById('adminGameHands').value='';
+  document.getElementById('autoGameNum').textContent='—';
   getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk){chk.checked=false;document.getElementById('score_'+s).value=0;document.getElementById('score_'+s).disabled=true;document.getElementById('hands_'+s).value=1;document.getElementById('hands_'+s).disabled=true}});
 }
 
@@ -473,15 +517,19 @@ function renderAllGames(){
   const gs=getAllGames(),el=document.getElementById('allGamesList');
   el.innerHTML=gs.map(g=>{
     const pot=g.players.reduce((t,p)=>t+p.score,0);
+    const mn=monthlyNum(g);const ml=monthLabel(gameMonthKey(g));
     const isEdited=editedBaseGames[g.id]?'<span style="color:var(--gold);font-size:11px;margin-left:6px">(edited)</span>':'';
-    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${g.id} — ${g.date}${isEdited}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(pot)}</div></div><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button></div>`;
+    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${mn} — ${g.date} <span style="color:var(--text4);font-weight:400;font-size:12px">${ml}</span>${isEdited}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(pot)}</div></div><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button></div>`;
   }).join('');
 }
 
 function renderManagedGames(){
   const el=document.getElementById('managedGames');
   if(!addedGames.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text4);font-size:13px">No admin-added games yet.</div>';return}
-  el.innerHTML=addedGames.map((g,i)=>`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${g.id} — ${g.date}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(g.players.reduce((t,p)=>t+p.score,0))}</div></div><div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button><button class="btn btn-sm btn-red" onclick="deleteAddedGame(${i})">Delete</button></div></div>`).join('');
+  el.innerHTML=addedGames.map((g,i)=>{
+    const mn=monthlyNum(g);const ml=monthLabel(gameMonthKey(g));
+    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${mn} — ${g.date} <span style="color:var(--text4);font-weight:400;font-size:12px">${ml}</span></div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(g.players.reduce((t,p)=>t+p.score,0))}</div></div><div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button><button class="btn btn-sm btn-red" onclick="deleteAddedGame(${i})">Delete</button></div></div>`;
+  }).join('');
 }
 
 function showToast(m,e){const t=document.getElementById('toast');t.textContent=m;t.className='toast show'+(e?' error':'');setTimeout(()=>t.className='toast',3000)}
