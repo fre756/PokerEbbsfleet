@@ -313,9 +313,14 @@
           "score": 3000
         },
         {
-          "name": "Prakash",
+          "name": "Pradeep",
           "handsPlayed": 1,
           "score": 5000
+        },
+        {
+          "name": "Prakash",
+          "handsPlayed": 1,
+          "score": 0
         },
         {
           "name": "Suresh",
