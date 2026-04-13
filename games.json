@@ -328,8 +328,62 @@
           "score": 3000
         }
       ]
+    },
+    {
+      "id": 43,
+      "date": "12/04/2026",
+      "hands": 19,
+      "players": [
+        {
+          "name": "Bala",
+          "handsPlayed": 3,
+          "score": 740
+        },
+        {
+          "name": "Bobby",
+          "handsPlayed": 2,
+          "score": 6400
+        },
+        {
+          "name": "Chaithu",
+          "handsPlayed": 4,
+          "score": 0
+        },
+        {
+          "name": "Jags",
+          "handsPlayed": 3,
+          "score": 5580
+        },
+        {
+          "name": "Mahi",
+          "handsPlayed": 1,
+          "score": 730
+        },
+        {
+          "name": "Nivas",
+          "handsPlayed": 2,
+          "score": 3730
+        },
+        {
+          "name": "Pradeep",
+          "handsPlayed": 1,
+          "score": 5
+        },
+        {
+          "name": "Suresh",
+          "handsPlayed": 2,
+          "score": 460
+        },
+        {
+          "name": "Suri",
+          "handsPlayed": 1,
+          "score": 1355
+        }
+      ]
     }
   ],
-  "customPlayers": [],
+  "customPlayers": [
+    "Bobby"
+  ],
   "editedBaseGames": {}
 }
