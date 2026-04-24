@@ -546,6 +546,33 @@
           "score": 2230
         }
       ]
+    },
+    {
+      "id": 47,
+      "date": "23/04/2026",
+      "hands": 4,
+      "players": [
+        {
+          "name": "Ganesh",
+          "handsPlayed": 1,
+          "score": 2500
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 1,
+          "score": 1000
+        },
+        {
+          "name": "Pradeep",
+          "handsPlayed": 1,
+          "score": 0
+        },
+        {
+          "name": "Suresh",
+          "handsPlayed": 1,
+          "score": 500
+        }
+      ]
     }
   ],
   "customPlayers": [
