@@ -1034,6 +1034,33 @@
           "score": 2400
         }
       ]
+    },
+    {
+      "id": 56,
+      "date": "05/05/2026",
+      "hands": 7,
+      "players": [
+        {
+          "name": "Ganesh",
+          "handsPlayed": 2,
+          "score": 0
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 1,
+          "score": 5000
+        },
+        {
+          "name": "Nivas",
+          "handsPlayed": 2,
+          "score": 0
+        },
+        {
+          "name": "Pradeep",
+          "handsPlayed": 2,
+          "score": 2000
+        }
+      ]
     }
   ],
   "customPlayers": [
