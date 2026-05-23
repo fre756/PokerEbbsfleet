@@ -1497,6 +1497,53 @@
           "score": 8540
         }
       ]
+    },
+    {
+      "id": 65,
+      "date": "22/05/2026",
+      "hands": 17,
+      "players": [
+        {
+          "name": "Chaithu",
+          "handsPlayed": 2,
+          "score": 2810
+        },
+        {
+          "name": "Jags",
+          "handsPlayed": 1,
+          "score": 3510
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 2,
+          "score": 3000
+        },
+        {
+          "name": "Srikanth",
+          "handsPlayed": 3,
+          "score": 0
+        },
+        {
+          "name": "Suresh",
+          "handsPlayed": 2,
+          "score": 2600
+        },
+        {
+          "name": "Suri",
+          "handsPlayed": 2,
+          "score": 2930
+        },
+        {
+          "name": "Veeru",
+          "handsPlayed": 4,
+          "score": 1400
+        },
+        {
+          "name": "Venki",
+          "handsPlayed": 1,
+          "score": 750
+        }
+      ]
     }
   ],
   "customPlayers": [
