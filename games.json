@@ -2017,6 +2017,58 @@
           "score": 2160
         }
       ]
+    },
+    {
+      "id": 75,
+      "date": "04/06/20",
+      "hands": 20,
+      "players": [
+        {
+          "name": "Bala",
+          "handsPlayed": 5,
+          "score": 500
+        },
+        {
+          "name": "Ganesh",
+          "handsPlayed": 2,
+          "score": 0
+        },
+        {
+          "name": "Jags",
+          "handsPlayed": 1,
+          "score": 1375
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 3,
+          "score": 2850
+        },
+        {
+          "name": "Mahi",
+          "handsPlayed": 3,
+          "score": 0
+        },
+        {
+          "name": "Nivas",
+          "handsPlayed": 1,
+          "score": 7700
+        },
+        {
+          "name": "Rohan",
+          "handsPlayed": 2,
+          "score": 2200
+        },
+        {
+          "name": "Suresh",
+          "handsPlayed": 1,
+          "score": 1300
+        },
+        {
+          "name": "Suri",
+          "handsPlayed": 2,
+          "score": 4075
+        }
+      ]
     }
   ],
   "customPlayers": [
