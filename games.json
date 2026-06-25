@@ -2867,6 +2867,63 @@
           "score": 7400
         }
       ]
+    },
+    {
+      "id": 90,
+      "date": "25/06/2026",
+      "hands": 18,
+      "players": [
+        {
+          "name": "Bala",
+          "handsPlayed": 1,
+          "score": 4200
+        },
+        {
+          "name": "Chaithu",
+          "handsPlayed": 2,
+          "score": 1610
+        },
+        {
+          "name": "Ganesh",
+          "handsPlayed": 2,
+          "score": 2530
+        },
+        {
+          "name": "Jags",
+          "handsPlayed": 2,
+          "score": 2065
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 1,
+          "score": 0
+        },
+        {
+          "name": "Nivas",
+          "handsPlayed": 2,
+          "score": 0
+        },
+        {
+          "name": "Pradeep",
+          "handsPlayed": 5,
+          "score": 2140
+        },
+        {
+          "name": "Prakash",
+          "handsPlayed": 1,
+          "score": 3260
+        },
+        {
+          "name": "Suresh",
+          "handsPlayed": 1,
+          "score": 970
+        },
+        {
+          "name": "Suri",
+          "handsPlayed": 1,
+          "score": 1225
+        }
+      ]
     }
   ],
   "customPlayers": [
