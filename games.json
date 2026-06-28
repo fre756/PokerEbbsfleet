@@ -3117,6 +3117,38 @@
           "score": 2300
         }
       ]
+    },
+    {
+      "id": 95,
+      "date": "27/06/2026",
+      "hands": 6,
+      "players": [
+        {
+          "name": "Bala",
+          "handsPlayed": 1,
+          "score": 1200
+        },
+        {
+          "name": "Ganesh",
+          "handsPlayed": 1,
+          "score": 0
+        },
+        {
+          "name": "Mahesh",
+          "handsPlayed": 1,
+          "score": 2000
+        },
+        {
+          "name": "Srikanth",
+          "handsPlayed": 2,
+          "score": 650
+        },
+        {
+          "name": "Suresh",
+          "handsPlayed": 1,
+          "score": 2150
+        }
+      ]
     }
   ],
   "customPlayers": [
