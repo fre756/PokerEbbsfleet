@@ -4565,6 +4565,33 @@
           "score": 0
         }
       ]
+    },
+    {
+      "id": 124,
+      "date": "27/07/2026",
+      "hands": 5,
+      "players": [
+        {
+          "name": "Mahesh",
+          "handsPlayed": 1,
+          "score": 935
+        },
+        {
+          "name": "Nivas",
+          "handsPlayed": 1,
+          "score": 1350
+        },
+        {
+          "name": "Pradeep",
+          "handsPlayed": 2,
+          "score": 1150
+        },
+        {
+          "name": "Rohan",
+          "handsPlayed": 1,
+          "score": 1565
+        }
+      ]
     }
   ],
   "customPlayers": [
