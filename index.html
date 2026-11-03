@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#080a0f;--surface:#0e1118;--surface2:#141820;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);--text:#e4e4e7;--text2:#a1a1aa;--text3:#71717a;--text4:#52525b;--gold:#f59e0b;--gold-dim:rgba(245,158,11,0.12);--gold-glow:rgba(245,158,11,0.25);--green:#10b981;--green-dim:rgba(16,185,129,0.1);--red:#ef4444;--red-dim:rgba(239,68,68,0.1);--blue:#3b82f6;--blue-dim:rgba(59,130,246,0.1)}
+:root{--bg:#080a0f;--surface:#0e1118;--surface2:#141820;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);--text:#e4e4e7;--text2:#a1a1aa;--text3:#71717a;--text4:#52525b;--gold:#f59e0b;--gold-dim:rgba(245,158,11,0.12);--gold-glow:rgba(245,158,11,0.25);--green:#10b981;--green-dim:rgba(16,185,129,0.1);--red:#ef4444;--red-dim:rgba(239,68,68,0.1);--blue:#3b82f6;--blue-dim:rgba(59,130,246,0.1);--purple:#a78bfa;--purple-dim:rgba(167,139,250,0.12)}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',system-ui,sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(245,158,11,0.06),transparent),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(16,185,129,0.04),transparent);pointer-events:none;z-index:0}
@@ -20,7 +20,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .mb-info{display:flex;align-items:center;gap:10px}
 .mb-icon{font-size:18px}
 .mb-label{font-size:15px;font-weight:700}
-.mb-label.all{color:var(--blue)}.mb-label.monthly{color:var(--gold)}
+.mb-label.all{color:var(--blue)}.mb-label.monthly{color:var(--gold)}.mb-label.quarterly{color:var(--purple)}
 .mb-meta{font-size:11px;color:var(--text4)}
 .mb-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;position:relative;white-space:nowrap}
 .mb-btn:hover{border-color:var(--gold-glow)}
@@ -31,6 +31,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .mb-di.sa{color:var(--blue);font-weight:700;background:var(--blue-dim)}
 .mb-di.sm{color:var(--gold);font-weight:700;background:var(--gold-dim)}
 .mb-dv{height:1px;background:var(--border);margin:4px 8px}
+.mb-di.sq{color:var(--purple);font-weight:700;background:var(--purple-dim)}
+.mb-dh{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text4);padding:6px 14px 2px}
 .hero-stats{display:flex;gap:12px;margin-bottom:20px}
 .hero-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;text-align:center}
 .hero-stat .num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold)}
@@ -234,9 +236,24 @@ function getMonths(){
 
 function currentMonthKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
 
+// Quarters: calendar quarters, key format 'Q2026-4'
+const Q_RANGES=['Jan–Mar','Apr–Jun','Jul–Sep','Oct–Dec'];
+function isQuarterKey(k){return typeof k==='string'&&k[0]==='Q'}
+function gameQuarterKey(g){const d=parseDate(g.date);return'Q'+d.year+'-'+(Math.floor(d.month/3)+1)}
+function quarterLabel(k){const[y,q]=k.slice(1).split('-');return'Q'+q+' '+y}
+function quarterRange(k){return Q_RANGES[+k.split('-')[1]-1]}
+function currentQuarterKey(){const d=new Date();return'Q'+d.getFullYear()+'-'+(Math.floor(d.getMonth()/3)+1)}
+function getQuarters(){
+  const qk={};
+  getAllGames().forEach(g=>{const k=gameQuarterKey(g);if(!qk[k])qk[k]={key:k,games:0};qk[k].games++});
+  const sortKey=k=>{const[y,q]=k.slice(1).split('-');return(+y)*10+(+q)};
+  return Object.values(qk).sort((a,b)=>sortKey(b.key)-sortKey(a.key));
+}
+
 function getFilteredGames(){
   const all=getAllGames();
   if(selectedMonth==='all')return all;
+  if(isQuarterKey(selectedMonth))return all.filter(g=>gameQuarterKey(g)===selectedMonth);
   let mk=selectedMonth;
   if(mk==='current')mk=currentMonthKey();
   return all.filter(g=>gameMonthKey(g)===mk);
@@ -325,19 +342,26 @@ function highlightKb(items){items.forEach((it,i)=>{it.classList.toggle('kb-focus
 function selectMonth(k){selectedMonth=k;document.getElementById('mbDrop').classList.remove('show');kbIdx=-1;refreshAll()}
 
 function renderMonthBar(){
-  const months=getMonths();const isAll=selectedMonth==='all';const ek=getEffectiveMonthKey();
-  const label=isAll?'All Time':monthLabel(ek);
+  const months=getMonths();const isAll=selectedMonth==='all';const isQ=isQuarterKey(selectedMonth);const ek=getEffectiveMonthKey();
+  const label=periodLabel();
   const fg=getFilteredGames();const ps=new Set();fg.forEach(g=>g.players.forEach(p=>ps.add(p.name)));
-  document.getElementById('mbIcon').textContent=isAll?'🌐':'📅';
-  const lbl=document.getElementById('mbLabel');lbl.textContent=label;lbl.className='mb-label '+(isAll?'all':'monthly');
-  document.getElementById('mbMeta').textContent=fg.length+' game'+(fg.length!==1?'s':'')+' · '+ps.size+' players';
+  document.getElementById('mbIcon').textContent=isAll?'🌐':isQ?'🗓️':'📅';
+  const lbl=document.getElementById('mbLabel');lbl.textContent=label;lbl.className='mb-label '+(isAll?'all':isQ?'quarterly':'monthly');
+  document.getElementById('mbMeta').textContent=(isQ?quarterRange(selectedMonth)+' · ':'')+fg.length+' game'+(fg.length!==1?'s':'')+' · '+ps.size+' players';
 
   let html=`<button class="mb-di ${selectedMonth==='all'?'sa':''}" onclick="selectMonth('all')"><span>🌐 All Time</span><span style="font-size:11px;color:var(--text4)">${getAllGames().length}g</span></button><div class="mb-dv"></div>`;
+  const quarters=getQuarters(),cqk=currentQuarterKey();
+  if(!quarters.some(q=>q.key===cqk))quarters.unshift({key:cqk,games:0});
+  html+=`<div class="mb-dh">Quarters</div>`;
+  quarters.forEach(q=>{
+    html+=`<button class="mb-di ${selectedMonth===q.key?'sq':''}" onclick="selectMonth('${q.key}')"><span>🗓️ ${quarterLabel(q.key)} <span style="font-size:11px;color:var(--text4);font-weight:400">${quarterRange(q.key)}</span></span><span style="font-size:11px;color:var(--text4)">${q.games}g</span></button>`;
+  });
+  html+=`<div class="mb-dv"></div><div class="mb-dh">Months</div>`;
   const cmk=currentMonthKey();
   // Add current month if not in list
   const hasCurrentMonth=months.some(m=>m.key===cmk);
   if(!hasCurrentMonth){
-    html+=`<button class="mb-di ${ek===cmk&&selectedMonth!=='all'?'sm':''}" onclick="selectMonth('current')"><span>📅 ${monthLabel(cmk)}</span><span style="font-size:11px;color:var(--text4)">0g</span></button>`;
+    html+=`<button class="mb-di ${selectedMonth==='current'?'sm':''}" onclick="selectMonth('current')"><span>📅 ${monthLabel(cmk)}</span><span style="font-size:11px;color:var(--text4)">0g</span></button>`;
   }
   months.forEach(m=>{
     const isSel=(selectedMonth==='current'&&m.key===cmk)||(selectedMonth===m.key);
@@ -354,10 +378,11 @@ function renderHero(){
 }
 
 // ===== SECTION TITLES =====
-function periodLabel(){return selectedMonth==='all'?'All Time':monthLabel(getEffectiveMonthKey())}
+function periodLabel(){return selectedMonth==='all'?'All Time':isQuarterKey(selectedMonth)?quarterLabel(selectedMonth):monthLabel(getEffectiveMonthKey())}
 function renderTitles(){
-  const p=periodLabel(),isAll=selectedMonth==='all';
-  document.getElementById('lbTitle').innerHTML=`<div class="section-title">${p} Leaderboard</div><div class="section-sub">${isAll?'Ranked by overall Result +/- (score minus 1,000 buy-in per hand)':'Monthly Result +/- resets each month · Ranked by profit/loss'}</div>`;
+  const p=periodLabel(),isAll=selectedMonth==='all',isQ=isQuarterKey(selectedMonth);
+  const lbSub=isAll?'Ranked by overall Result +/- (score minus 1,000 buy-in per hand)':isQ?'Quarterly Result +/- across '+quarterRange(selectedMonth)+' · Ranked by profit/loss':'Monthly Result +/- resets each month · Ranked by profit/loss';
+  document.getElementById('lbTitle').innerHTML=`<div class="section-title">${p} Leaderboard</div><div class="section-sub">${lbSub}</div>`;
   document.getElementById('effTitle').innerHTML=`<div class="section-title">${p} Efficiency</div><div class="section-sub">Average score per hand — min 2 hands to qualify</div>`;
   document.getElementById('gTitle').innerHTML=`<div class="section-title">${p} Games</div><div class="section-sub">Individual results for each session</div>`;
   document.getElementById('pTitle').innerHTML=`<div class="section-title">${p} Players</div><div class="section-sub">Stats and game history</div>`;
