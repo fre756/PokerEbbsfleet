@@ -4,7 +4,7 @@
  "id": "mwqwr1xkzauoe",
  "date": "21/11/2026",
  "startedAt": "2026-11-21T21:16:15.370Z",
- "updatedAt": "2026-11-21T21:57:40.741Z",
+ "updatedAt": "2026-11-21T22:22:09.920Z",
  "bankStart": 30000,
  "extra": [],
  "log": [
@@ -114,6 +114,12 @@
    "id": "mwqy8aq8tp34y",
    "t": "2026-11-21T21:57:39.536Z",
    "name": "Ganesh",
+   "d": 1
+  },
+  {
+   "id": "mwqz3scs3i761",
+   "t": "2026-11-21T22:22:08.716Z",
+   "name": "Venki",
    "d": 1
   }
  ]
