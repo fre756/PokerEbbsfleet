@@ -4,7 +4,7 @@
  "id": "mwqwr1xkzauoe",
  "date": "21/11/2026",
  "startedAt": "2026-11-21T21:16:15.370Z",
- "updatedAt": "2026-11-21T21:16:57.678Z",
+ "updatedAt": "2026-11-21T21:17:01.287Z",
  "bankStart": 30000,
  "extra": [],
  "log": [
@@ -18,6 +18,18 @@
    "id": "mwqwryb55fcmg",
    "t": "2026-11-21T21:16:57.329Z",
    "name": "Jags",
+   "d": 1
+  },
+  {
+   "id": "mwqwrzpj2txtd",
+   "t": "2026-11-21T21:16:59.143Z",
+   "name": "Mahesh",
+   "d": 1
+  },
+  {
+   "id": "mwqws0focpnxj",
+   "t": "2026-11-21T21:17:00.084Z",
+   "name": "Nivas",
    "d": 1
   }
  ]
