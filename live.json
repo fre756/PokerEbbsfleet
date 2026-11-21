@@ -4,8 +4,15 @@
  "id": "mwqwr1xkzauoe",
  "date": "21/11/2026",
  "startedAt": "2026-11-21T21:16:15.370Z",
- "updatedAt": "2026-11-21T21:16:16.575Z",
+ "updatedAt": "2026-11-21T21:16:56.511Z",
  "bankStart": 30000,
  "extra": [],
- "log": []
+ "log": [
+  {
+   "id": "mwqwrwqzw91bj",
+   "t": "2026-11-21T21:16:55.307Z",
+   "name": "Chaithu",
+   "d": 1
+  }
+ ]
 }
