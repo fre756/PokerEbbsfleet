@@ -4,7 +4,7 @@
  "id": "mwqwr1xkzauoe",
  "date": "21/11/2026",
  "startedAt": "2026-11-21T21:16:15.370Z",
- "updatedAt": "2026-11-21T23:40:04.726Z",
+ "updatedAt": "2026-11-21T23:40:53.100Z",
  "bankStart": 30000,
  "extra": [],
  "log": [
@@ -162,6 +162,12 @@
    "id": "mwr1vzghcjmot",
    "t": "2026-11-21T23:40:03.521Z",
    "name": "Venki",
+   "d": 1
+  },
+  {
+   "id": "mwr1x0s7n6iqh",
+   "t": "2026-11-21T23:40:51.895Z",
+   "name": "Nivas",
    "d": 1
   }
  ]
