@@ -116,6 +116,34 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--text4);border-top-color:var(--gold);border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:#000;padding:12px 24px;border-radius:10px;font-weight:600;font-size:13px;z-index:400;opacity:0;transition:all 0.3s;pointer-events:none;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast.error{background:var(--red);color:#fff}
 .empty-state{text-align:center;padding:40px 20px;color:var(--text4);font-size:14px}
+.tally{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;border:1px solid var(--border2);background:var(--surface2);color:var(--text3)}
+.tally.ok{border-color:rgba(16,185,129,0.3);background:var(--green-dim);color:var(--green)}
+.tally.bad{border-color:rgba(239,68,68,0.35);background:var(--red-dim);color:#fca5a5}
+.tally .tl-main{font-weight:700}.tally .tl-sub{font-size:12px;color:var(--text3);margin-top:3px}
+.tally label{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:12px;color:var(--text2);cursor:pointer}.tally input{accent-color:var(--red);width:16px;height:16px}
+.game-flag{margin:-8px 0 14px;padding:8px 12px;border-radius:8px;background:var(--red-dim);color:#fca5a5;font-size:12px}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:6px;vertical-align:middle;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.live-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.live-card h3{font-size:15px;font-weight:700;margin-bottom:4px}.live-card p{font-size:12px;color:var(--text4);line-height:1.5}
+.live-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.live-title{font-size:18px;font-weight:800;color:var(--text)}.live-sub{font-size:12px;color:var(--text4);margin-top:2px}
+.live-bank{font-size:13px;color:var(--text2);padding:10px 14px;border-radius:10px;background:var(--blue-dim);border:1px solid rgba(59,130,246,0.2);margin-bottom:14px}
+.live-bank b{color:var(--blue);font-family:'JetBrains Mono',monospace}
+.live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
+.lv-tile{position:relative;padding:12px 14px;border-radius:12px;background:var(--surface2);border:1px solid var(--border2);cursor:pointer;user-select:none;-webkit-user-select:none;min-height:72px;transition:transform 0.08s,border-color 0.2s}
+.lv-tile:hover{border-color:var(--gold-glow)}.lv-tile:active{transform:scale(0.97)}
+.lv-tile.has{border-color:rgba(245,158,11,0.3);background:var(--gold-dim)}
+.lv-tile .n{font-weight:600;font-size:14px;padding-right:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv-tile .c{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);line-height:1.2;margin-top:4px}.lv-tile:not(.has) .c{color:var(--text4)}
+.lv-tile .minus{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text3);font-size:16px;line-height:1;cursor:pointer;font-family:inherit}
+.lv-tile .minus:hover{color:var(--red);border-color:rgba(239,68,68,0.4)}
+.lv-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;background:var(--surface2);margin-bottom:6px;font-size:14px}
+.lv-row .cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--gold)}
+.lv-log{font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding:7px 2px}.lv-log:first-child{border-top:none}
+.lv-log .t{font-family:'JetBrains Mono',monospace;color:var(--text4);margin-right:8px}.lv-log.corr{color:#fca5a5}
+.lv-sync{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:600;background:var(--surface2);color:var(--text4)}.lv-sync.ok{background:var(--green-dim);color:var(--green)}.lv-sync.err{background:var(--red-dim);color:var(--red)}.lv-sync.pending{background:var(--gold-dim);color:var(--gold)}
+.lv-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 @media(max-width:600px){.hero h1{font-size:28px}.hero-stats{gap:8px}.hero-stat .num{font-size:18px}.nav{flex-wrap:wrap}.nav button{font-size:11px;padding:10px 6px}.lb-row{padding:12px;gap:10px}.player-score{font-size:14px;min-width:55px}.game-name{width:70px}.pc-stats{grid-template-columns:repeat(2,1fr)}.form-row{flex-direction:column}.form-input-sm{width:100%}.admin-toggle{bottom:12px;right:12px;font-size:11px;padding:8px 12px}.month-bar{padding:8px 12px}.mb-btn{font-size:12px;padding:6px 10px}}
 </style>
 </head>
@@ -130,12 +158,14 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <button onclick="showTab(2)">Games</button>
     <button onclick="showTab(3)">Players</button>
     <button onclick="showTab(4)">Awards</button>
+    <button onclick="showTab(LIVE_TAB)" id="liveNavBtn">Live</button>
   </div>
   <div class="section active" id="tab0"><div id="lbTitle"></div><div id="leaderboard"></div></div>
   <div class="section" id="tab1"><div id="effTitle"></div><div id="efficiency"></div></div>
   <div class="section" id="tab2"><div id="gTitle"></div><div id="games"></div></div>
   <div class="section" id="tab3"><div id="pTitle"></div><div id="players"></div></div>
   <div class="section" id="tab4"><div id="aTitle"></div><div id="awards"></div></div>
+  <div class="section" id="tabLive"><div id="liveView"></div></div>
   <div class="section" id="tab5">
     <div class="admin-section">
       <div class="admin-header"><h2>Admin Panel</h2><span class="admin-badge">Restricted</span></div>
@@ -148,11 +178,12 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
         <h3 style="font-size:16px;font-weight:700;margin-bottom:16px" id="formTitle">Add New Game</h3>
-        <div class="form-row" style="margin-bottom:16px"><div style="flex:1"><label class="form-label">Date (DD/MM/YYYY)</label><input type="text" id="adminGameDate" class="form-input" placeholder="e.g. 05/04/2026" oninput="onDateInput()"></div><div style="flex:1"><label class="form-label">Total Hands</label><input type="number" id="adminGameHands" class="form-input form-input-sm" min="1"></div><div style="flex:1"><label class="form-label">Monthly Game #</label><div class="form-input" id="autoGameNum" style="background:var(--surface);color:var(--gold);font-weight:700;cursor:default">—</div></div></div>
+        <div class="form-row" style="margin-bottom:16px"><div style="flex:1"><label class="form-label">Date (DD/MM/YYYY)</label><input type="text" id="adminGameDate" class="form-input" placeholder="e.g. 05/04/2026" oninput="onDateInput()"></div><div style="flex:1"><label class="form-label">Total Hands (auto)</label><input type="number" id="adminGameHands" class="form-input form-input-sm" readonly tabindex="-1" style="color:var(--text3);cursor:default" title="Sum of each player's hands"></div><div style="flex:1"><label class="form-label">Monthly Game #</label><div class="form-input" id="autoGameNum" style="background:var(--surface);color:var(--gold);font-weight:700;cursor:default">—</div></div></div>
         <p style="font-size:11px;color:var(--text4);margin-top:-12px;margin-bottom:14px">Enter the date first — the game number auto-calculates based on the month.</p>
         <label class="form-label" style="margin-bottom:10px;display:block">Player Scores — tick who participated</label>
         <div style="overflow-x:auto"><table class="score-table"><thead><tr><th style="width:40px"></th><th>Player</th><th style="width:130px">Score</th><th style="width:100px">Hands</th></tr></thead><tbody id="scoreTableBody"></tbody></table></div>
         <div class="add-player-row"><span style="font-size:13px;color:var(--text3)">New player:</span><input type="text" id="newPlayerName" placeholder="Name" onkeydown="if(event.key==='Enter')addNewPlayer()"><button class="btn btn-sm btn-ghost" onclick="addNewPlayer()">+ Add</button></div>
+        <div id="tallyBox" class="tally"></div>
         <div style="display:flex;gap:10px;margin-top:20px;align-items:center">
           <button class="btn btn-gold" id="saveBtn" onclick="submitGame()">Save Game to GitHub</button>
           <button class="btn btn-ghost" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;color:var(--red)">Cancel Edit</button>
@@ -179,6 +210,14 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 <div class="toast" id="toast"></div>
 <script>
 const ADMIN_PASSWORD="poker2026",DEFAULT_GH={owner:"fre756",repo:"PokerEbbsfleet",branch:"main"},DATA_PATH="games.json";
+// ===== FEATURE SWITCHES =====
+// Set either to false (and commit) to switch that feature off. Scores and saved games are unaffected.
+// Full rollback: restore index.html from the git tag "before-live-tracker".
+const FEATURES={
+  tallyCheck:true,   // block saving a game when total chips != hands x 1,000, and flag games that don't tally
+  liveTracker:true   // Live tab: banker taps a name per buy-in, everyone can follow
+};
+const LIVE_TAB=5,ADMIN_TAB=6;
 const MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
 
 // ===== ALL 21 BASE GAMES =====
@@ -316,7 +355,7 @@ function medal(i){return i===0?'🥇':i===1?'🥈':i===2?'🥉':null}
 function fmt(n){return n.toLocaleString()}
 function fmtRes(n){return(n>=0?'+':'')+n.toLocaleString()}
 function resClr(n){return n>0?'var(--green)':n<0?'var(--red)':'var(--text4)'}
-function showTab(i){document.querySelectorAll('.section').forEach((s,x)=>s.classList.toggle('active',x===i));document.querySelectorAll('.nav button').forEach((b,x)=>b.classList.toggle('active',x===i))}
+function showTab(i){document.querySelectorAll('.section').forEach((s,x)=>s.classList.toggle('active',x===i));document.querySelectorAll('.nav button').forEach((b,x)=>b.classList.toggle('active',x===i));onTabChange(i)}
 
 // ===== MONTH BAR =====
 let kbIdx=-1;
@@ -404,7 +443,7 @@ function renderEfficiency(){
 function renderGames(){
   const gs=getFilteredGames(),el=document.getElementById('games');
   if(!gs.length){el.innerHTML='<div class="empty-state">No games this period yet.</div>';return}
-  el.innerHTML=gs.map(g=>{const s=[...g.players].map(p=>({...p,result:p.score-(p.handsPlayed*1000)})).sort((a,b)=>b.result-a.result),mx=Math.max(...s.map(p=>Math.abs(p.result)))||1,pot=g.players.reduce((t,p)=>t+p.score,0),mn=monthlyNum(g);return`<div class="game-card"><div class="game-header"><div><span class="game-id">Game <span>${mn}</span></span><span class="game-date">${g.date}</span></div><div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Pot: ${fmt(pot)}</div></div>${s.map((p,i)=>{const pct=(Math.abs(p.result)/mx*100).toFixed(1);return`<div class="game-row"><div class="game-rank ${i===0?'first':''}">${i+1}</div><div class="game-name ${p.score===0?'bust':''}">${p.name}</div><div class="game-bar"><div class="bar-track"><div class="bar-fill ${p.result>=0?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div><div class="game-hands">(${p.handsPlayed})</div><div style="width:65px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${resClr(p.result)}">${fmtRes(p.result)}</div></div>`}).join('')}</div>`}).join('')}
+  el.innerHTML=gs.map(g=>{const s=[...g.players].map(p=>({...p,result:p.score-(p.handsPlayed*1000)})).sort((a,b)=>b.result-a.result),mx=Math.max(...s.map(p=>Math.abs(p.result)))||1,pot=g.players.reduce((t,p)=>t+p.score,0),mn=monthlyNum(g);return`<div class="game-card"><div class="game-header"><div><span class="game-id">Game <span>${mn}</span></span><span class="game-date">${g.date}</span></div><div class="game-meta">${g.players.length} players · ${g.hands} hands<br>Pot: ${fmt(pot)}</div></div>${tallyFlag(g)}${s.map((p,i)=>{const pct=(Math.abs(p.result)/mx*100).toFixed(1);return`<div class="game-row"><div class="game-rank ${i===0?'first':''}">${i+1}</div><div class="game-name ${p.score===0?'bust':''}">${p.name}</div><div class="game-bar"><div class="bar-track"><div class="bar-fill ${p.result>=0?'bar-green':'bar-gray'}" style="width:${pct}%"></div></div></div><div class="game-score ${p.score===0?'bust':''}">${p.score===0?'BUST':fmt(p.score)}</div><div class="game-hands">(${p.handsPlayed})</div><div style="width:65px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${resClr(p.result)}">${fmtRes(p.result)}</div></div>`}).join('')}</div>`}).join('')}
 
 function renderPlayers(){
   const a=getAgg(),s=[...a].sort((x,y)=>y.totalResult-x.totalResult),el=document.getElementById('players');
@@ -440,11 +479,11 @@ function renderAwards(){
 }
 
 // ===== ADMIN =====
-function handleAdminClick(){if(isAdminMode){showTab(5);return}document.getElementById('loginModal').classList.add('show');document.getElementById('adminPassword').value='';document.getElementById('adminLoginError').style.display='none';setTimeout(()=>document.getElementById('adminPassword').focus(),100)}
-function attemptAdminLogin(){if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){isAdminMode=true;closeAdminModal();enableAdmin();showTab(5);showToast('Admin mode')}else{document.getElementById('adminLoginError').style.display='block';document.getElementById('adminPassword').value=''}}
+function handleAdminClick(){if(isAdminMode){showTab(ADMIN_TAB);return}document.getElementById('loginModal').classList.add('show');document.getElementById('adminPassword').value='';document.getElementById('adminLoginError').style.display='none';setTimeout(()=>document.getElementById('adminPassword').focus(),100)}
+function attemptAdminLogin(){if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){isAdminMode=true;closeAdminModal();enableAdmin();showTab(ADMIN_TAB);showToast('Admin mode')}else{document.getElementById('adminLoginError').style.display='block';document.getElementById('adminPassword').value=''}}
 function closeAdminModal(){document.getElementById('loginModal').classList.remove('show')}
 function adminLogout(){isAdminMode=false;disableAdmin();showTab(0);showToast('Exited admin')}
-function enableAdmin(){const n=document.getElementById('nav');if(!document.getElementById('adminNavBtn')){const b=document.createElement('button');b.id='adminNavBtn';b.className='admin-tab';b.onclick=()=>showTab(5);b.textContent='Admin';n.appendChild(b)}document.getElementById('adminToggle').classList.add('logged-in');document.getElementById('adminToggleText').textContent='Admin Panel';loadGHConfig();renderScoreTable();renderAllGames();renderManagedGames()}
+function enableAdmin(){const n=document.getElementById('nav');if(!document.getElementById('adminNavBtn')){const b=document.createElement('button');b.id='adminNavBtn';b.className='admin-tab';b.onclick=()=>showTab(ADMIN_TAB);b.textContent='Admin';n.appendChild(b)}document.getElementById('adminToggle').classList.add('logged-in');document.getElementById('adminToggleText').textContent='Admin Panel';loadGHConfig();renderScoreTable();renderAllGames();renderManagedGames()}
 function disableAdmin(){const b=document.getElementById('adminNavBtn');if(b)b.remove();document.getElementById('adminToggle').classList.remove('logged-in');document.getElementById('adminToggleText').textContent='Admin'}
 
 // ===== GITHUB =====
@@ -455,8 +494,8 @@ async function testGitHub(){const c=ghCfg(),el=document.getElementById('ghStatus
 async function saveToGitHub(){const c=ghCfg();if(!c.token){showToast('Set GitHub token first',true);return false}const payload=JSON.stringify({addedGames,customPlayers,editedBaseGames},null,2),content=btoa(unescape(encodeURIComponent(payload)));try{const gr=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}?ref=${c.branch}`,{headers:{'Authorization':'Bearer '+c.token}});if(gr.ok)ghFileSha=(await gr.json()).sha;else ghFileSha=null}catch(e){}const body={message:'Update poker scores via admin',content,branch:c.branch};if(ghFileSha)body.sha=ghFileSha;try{const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${DATA_PATH}`,{method:'PUT',headers:{'Authorization':'Bearer '+c.token,'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.ok||r.status===201){ghFileSha=(await r.json()).content.sha;return true}const err=await r.json();showToast('GitHub: '+(err.message||'Error'),true);return false}catch(e){showToast('Network error',true);return false}}
 
 // ===== SCORE TABLE =====
-function renderScoreTable(){const ns=getAllPlayerNames();document.getElementById('scoreTableBody').innerHTML=ns.map(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_');return`<tr><td><input type="checkbox" id="chk_${s}" onchange="toggleRow('${s}')"></td><td><span class="pname">${n}</span></td><td><input type="number" id="score_${s}" min="0" value="0" disabled></td><td><input type="number" id="hands_${s}" min="1" value="1" disabled></td></tr>`}).join('')}
-function toggleRow(s){const on=document.getElementById('chk_'+s).checked;document.getElementById('score_'+s).disabled=!on;document.getElementById('hands_'+s).disabled=!on;if(on)document.getElementById('score_'+s).focus()}
+function renderScoreTable(){const ns=getAllPlayerNames();document.getElementById('scoreTableBody').innerHTML=ns.map(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_');return`<tr><td><input type="checkbox" id="chk_${s}" onchange="toggleRow('${s}')"></td><td><span class="pname">${n}</span></td><td><input type="number" id="score_${s}" min="0" value="0" disabled oninput="updateTally()"></td><td><input type="number" id="hands_${s}" min="1" value="1" disabled oninput="updateTally()"></td></tr>`}).join('')}
+function toggleRow(s){const on=document.getElementById('chk_'+s).checked;document.getElementById('score_'+s).disabled=!on;document.getElementById('hands_'+s).disabled=!on;if(on)document.getElementById('score_'+s).focus();updateTally()}
 function addNewPlayer(){const i=document.getElementById('newPlayerName'),n=i.value.trim();if(!n)return;if(getAllPlayerNames().map(x=>x.toLowerCase()).includes(n.toLowerCase())){showToast('Player exists',true);return}customPlayers.push(n);i.value='';renderScoreTable();showToast(n+' added')}
 
 // ===== EDIT GAME =====
@@ -476,6 +515,7 @@ function editGame(gameId){
     const chk=document.getElementById('chk_'+s);
     if(chk){chk.checked=true;document.getElementById('score_'+s).disabled=false;document.getElementById('score_'+s).value=p.score;document.getElementById('hands_'+s).disabled=false;document.getElementById('hands_'+s).value=p.handsPlayed}
   });
+  updateTally();
   document.getElementById('formTitle').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -488,14 +528,19 @@ function cancelEdit(){
 }
 
 async function submitGame(){
-  const date=document.getElementById('adminGameDate').value.trim(),hands=parseInt(document.getElementById('adminGameHands').value);
-  if(!date||!hands){showToast('Fill date and total hands',true);return}
+  const date=document.getElementById('adminGameDate').value.trim();
+  if(!date){showToast('Fill in the date',true);return}
   const mk=monthKeyFromDateStr(date);
   if(!mk){showToast('Invalid date format (DD/MM/YYYY)',true);return}
 
   const players=[];
   getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk&&chk.checked)players.push({name:n,handsPlayed:parseInt(document.getElementById('hands_'+s).value)||1,score:parseInt(document.getElementById('score_'+s).value)||0})});
   if(!players.length){showToast('Select players',true);return}
+  const tl=tallyOf(players),hands=FEATURES.tallyCheck?tl.hands:(parseInt(document.getElementById('adminGameHands').value)||tl.hands);
+  if(!hands){showToast('Fill in total hands',true);return}
+  if(FEATURES.tallyCheck&&tl.diff!==0&&!(document.getElementById('allowMismatch')||{}).checked){
+    showToast("Chips don't match hands × 1,000. Fix the counts, or tick 'Save anyway'.",true);
+    document.getElementById('tallyBox').scrollIntoView({behavior:'smooth',block:'center'});return}
 
   const isEdit=editingGameId!==null;
   let gid;
@@ -517,6 +562,7 @@ async function submitGame(){
   if(ok){
     st.innerHTML='<span class="gh-status ok">Saved!</span>';setTimeout(()=>st.innerHTML='',5000);
     cancelEdit();refreshAll();
+    if(liveFinishId&&live&&live.id===liveFinishId){live.active=false;live.endedAt=new Date().toISOString();live.savedGameId=gid;liveFinishId=null;liveQueueSave()}
     const savedGame=getAllGames().find(g=>g.id===gid);
     const mn=savedGame?monthlyNum(savedGame):0;
     showToast(isEdit?'Game '+mn+' updated!':'Game '+mn+' saved!');
@@ -536,6 +582,7 @@ function clearForm(){
   document.getElementById('adminGameDate').value='';document.getElementById('adminGameHands').value='';
   document.getElementById('autoGameNum').textContent='—';
   getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk){chk.checked=false;document.getElementById('score_'+s).value=0;document.getElementById('score_'+s).disabled=true;document.getElementById('hands_'+s).value=1;document.getElementById('hands_'+s).disabled=true}});
+  updateTally();
 }
 
 function renderAllGames(){
@@ -544,7 +591,7 @@ function renderAllGames(){
     const pot=g.players.reduce((t,p)=>t+p.score,0);
     const mn=monthlyNum(g);const ml=monthLabel(gameMonthKey(g));
     const isEdited=editedBaseGames[g.id]?'<span style="color:var(--gold);font-size:11px;margin-left:6px">(edited)</span>':'';
-    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${mn} — ${g.date} <span style="color:var(--text4);font-weight:400;font-size:12px">${ml}</span>${isEdited}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(pot)}</div></div><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button></div>`;
+    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${mn} — ${g.date} <span style="color:var(--text4);font-weight:400;font-size:12px">${ml}</span>${isEdited}</div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(pot)}${tallyNote(g)}</div></div><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button></div>`;
   }).join('');
 }
 
@@ -553,15 +600,158 @@ function renderManagedGames(){
   if(!addedGames.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text4);font-size:13px">No admin-added games yet.</div>';return}
   el.innerHTML=addedGames.map((g,i)=>{
     const mn=monthlyNum(g);const ml=monthLabel(gameMonthKey(g));
-    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${mn} — ${g.date} <span style="color:var(--text4);font-weight:400;font-size:12px">${ml}</span></div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(g.players.reduce((t,p)=>t+p.score,0))}</div></div><div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button><button class="btn btn-sm btn-red" onclick="deleteAddedGame(${i})">Delete</button></div></div>`;
+    return`<div class="saved-game"><div class="saved-game-info"><div class="saved-game-title">Game ${mn} — ${g.date} <span style="color:var(--text4);font-weight:400;font-size:12px">${ml}</span></div><div class="saved-game-detail">${g.players.length} players · ${g.hands} hands · Pot: ${fmt(g.players.reduce((t,p)=>t+p.score,0))}${tallyNote(g)}</div></div><div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick="editGame(${g.id})" style="color:var(--gold);border-color:var(--gold-dim)">Edit</button><button class="btn btn-sm btn-red" onclick="deleteAddedGame(${i})">Delete</button></div></div>`;
   }).join('');
 }
 
 function showToast(m,e){const t=document.getElementById('toast');t.textContent=m;t.className='toast show'+(e?' error':'');setTimeout(()=>t.className='toast',3000)}
 function refreshAll(){renderMonthBar();renderHero();renderTitles();renderLeaderboard();renderEfficiency();renderGames();renderPlayers();renderAwards();if(isAdminMode){renderScoreTable();renderAllGames();renderManagedGames()}}
 
+// ===== CHIP TALLY CHECK =====
+function tallyOf(players){const chips=players.reduce((t,p)=>t+(p.score||0),0),hands=players.reduce((t,p)=>t+(p.handsPlayed||0),0);return{chips,hands,diff:chips-hands*1000}}
+function tallyFlag(g){if(!FEATURES.tallyCheck)return'';const t=tallyOf(g.players);if(!t.diff)return'';return`<div class="game-flag">⚠ Chips don't tally: ${fmt(t.chips)} chips for ${t.hands} hands (${fmt(t.hands*1000)}) · ${t.diff>0?'+':'−'}${fmt(Math.abs(t.diff))}</div>`}
+function tallyNote(g){if(!FEATURES.tallyCheck)return'';const t=tallyOf(g.players);return t.diff?` · <span style="color:var(--red)">⚠ chips off by ${t.diff>0?'+':'−'}${fmt(Math.abs(t.diff))}</span>`:''}
+let tallyLastDiff=null;
+function formPlayers(){const ps=[];getAllPlayerNames().forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_'),chk=document.getElementById('chk_'+s);if(chk&&chk.checked)ps.push({name:n,handsPlayed:parseInt(document.getElementById('hands_'+s).value)||0,score:parseInt(document.getElementById('score_'+s).value)||0})});return ps}
+function updateTally(){
+  const box=document.getElementById('tallyBox');if(!box)return;
+  if(!FEATURES.tallyCheck){box.style.display='none';return}
+  const ps=formPlayers(),t=tallyOf(ps);
+  document.getElementById('adminGameHands').value=t.hands||'';
+  if(!ps.length){box.className='tally';box.innerHTML='Tick the players and enter their chips. Total chips must equal hands × 1,000 before the game can be saved.';tallyLastDiff=null;return}
+  if(!t.diff){box.className='tally ok';box.innerHTML=`<div class="tl-main">✓ Tallies: ${t.hands} hands × 1,000 = ${fmt(t.chips)} chips</div>`;tallyLastDiff=0;return}
+  const keep=tallyLastDiff===t.diff&&(document.getElementById('allowMismatch')||{}).checked;tallyLastDiff=t.diff;
+  const abs=Math.abs(t.diff),whole=abs%1000===0,n=abs/1000;
+  const why=t.diff>0?(whole?`About ${n} hand${n>1?'s':''} taken but not recorded, or a chip count is too high.`:'A chip count looks wrong.'):(whole?`Hands recorded but chips missing: ${n} hand${n>1?'s':''} too many logged, or chips not counted.`:'A chip count looks wrong, or chips are missing.');
+  box.className='tally bad';
+  box.innerHTML=`<div class="tl-main">✗ Doesn't tally: ${fmt(t.chips)} chips counted vs ${t.hands} hands (${fmt(t.hands*1000)}) · ${t.diff>0?'+':'−'}${fmt(abs)}</div><div class="tl-sub">${why} Recount before saving.</div><label><input type="checkbox" id="allowMismatch" ${keep?'checked':''}> Save anyway. The game will show a public "chips don't tally" warning.</label>`;
+}
+
+// ===== LIVE BUY-IN TRACKER =====
+const LIVE_BRANCH='live',LIVE_PATH='live.json';
+let live=null,liveSha=null,livePollTimer=null,liveSaveTimer=null,liveSaving=false,liveDirty=false,liveSync={s:'',m:''},liveRawUntil=0,liveViaRaw=false,liveFinishId=null,liveAdminLoaded=false,liveLoadErr='',livePublic=null,liveFetchedAt=0;
+function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function newId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function todayStr(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
+function hhmm(iso){const d=new Date(iso);return isNaN(d)?'':String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function ago(iso){const s=Math.max(0,Math.round((Date.now()-new Date(iso))/1000));return s<60?s+'s ago':s<3600?Math.round(s/60)+' min ago':hhmm(iso)}
+function liveCounts(L){const c={};((L&&L.log)||[]).forEach(e=>{c[e.name]=(c[e.name]||0)+e.d});return c}
+function liveTotal(L){return Object.values(liveCounts(L)).reduce((t,n)=>t+Math.max(0,n),0)}
+function liveMerge(target,src){const ids=new Set(target.log.map(e=>e.id));(src.log||[]).forEach(e=>{if(!ids.has(e.id))target.log.push(e)});(src.extra||[]).forEach(n=>{target.extra=target.extra||[];if(!target.extra.includes(n))target.extra.push(n)});target.log.sort((a,b)=>a.t.localeCompare(b.t))}
+function ghApi(path){const c=ghCfg();return`https://api.github.com/repos/${c.owner}/${c.repo}/${path}`}
+function decodeB64(b){return decodeURIComponent(escape(atob(b.replace(/\n/g,''))))}
+
+// Public read: API with browser revalidation (unchanged polls return 304, which don't use rate limit); raw file as fallback
+async function liveFetchPublic(){
+  const o=DEFAULT_GH.owner,r=DEFAULT_GH.repo;
+  const raw=async()=>{liveViaRaw=true;const x=await fetch(`https://raw.githubusercontent.com/${o}/${r}/${LIVE_BRANCH}/${LIVE_PATH}?t=${Date.now()}`,{cache:'no-store'});if(x.status===404)return null;if(!x.ok)throw new Error('raw '+x.status);return x.json()};
+  if(Date.now()<liveRawUntil)return raw();
+  try{const x=await fetch(`https://api.github.com/repos/${o}/${r}/contents/${LIVE_PATH}?ref=${LIVE_BRANCH}`,{cache:'no-cache',headers:{'Accept':'application/vnd.github.raw+json'}});
+    if(x.status===404){liveViaRaw=false;return null}
+    if(x.status===403||x.status===429){liveRawUntil=Date.now()+10*60000;return raw()}
+    if(!x.ok)throw new Error('api '+x.status);liveViaRaw=false;return x.json()}
+  catch(e){return raw()}
+}
+async function ghLiveGet(){const c=ghCfg();const r=await fetch(ghApi(`contents/${LIVE_PATH}?ref=${LIVE_BRANCH}&t=${Date.now()}`),{cache:'no-store',headers:{Authorization:'Bearer '+c.token}});if(r.status===404)return{data:null,sha:null};if(!r.ok)throw new Error('GitHub '+r.status);const j=await r.json();return{data:JSON.parse(decodeB64(j.content)),sha:j.sha}}
+async function ghEnsureLiveBranch(){const c=ghCfg(),h={Authorization:'Bearer '+c.token};let r=await fetch(ghApi(`git/ref/heads/${LIVE_BRANCH}`),{headers:h,cache:'no-store'});if(r.ok)return;if(r.status!==404)throw new Error('GitHub '+r.status);const m=await fetch(ghApi(`git/ref/heads/${c.branch}`),{headers:h,cache:'no-store'});if(!m.ok)throw new Error('GitHub '+m.status);const sha=(await m.json()).object.sha;r=await fetch(ghApi('git/refs'),{method:'POST',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify({ref:'refs/heads/'+LIVE_BRANCH,sha})});if(!r.ok&&r.status!==422)throw new Error('GitHub '+r.status)}
+async function ghLivePut(data,sha){const c=ghCfg();const body={message:'Live buy-ins update',content:btoa(unescape(encodeURIComponent(JSON.stringify(data,null,1)))),branch:LIVE_BRANCH};if(sha)body.sha=sha;const r=await fetch(ghApi(`contents/${LIVE_PATH}`),{method:'PUT',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.ok)return(await r.json()).content.sha;const e=new Error('GitHub '+r.status);e.status=r.status;throw e}
+
+function liveQueueSave(){liveDirty=true;liveSync={s:'pending',m:'Unsaved'};try{localStorage.setItem('live_backup',JSON.stringify(live))}catch(e){}clearTimeout(liveSaveTimer);liveSaveTimer=setTimeout(liveFlush,1200);renderLive();liveBadge()}
+async function liveFlush(){
+  if(liveSaving){clearTimeout(liveSaveTimer);liveSaveTimer=setTimeout(liveFlush,800);return}
+  if(!liveDirty||!live)return;
+  liveSaving=true;liveDirty=false;liveSync={s:'pending',m:'Saving…'};renderLive();
+  const snap=JSON.parse(JSON.stringify(live));snap.updatedAt=new Date().toISOString();
+  try{
+    try{liveSha=await ghLivePut(snap,liveSha)}
+    catch(e){
+      if(e.status===404){await ghEnsureLiveBranch();const g=await ghLiveGet();liveSha=await ghLivePut(snap,g.sha)}
+      else if(e.status===409||e.status===422){const g=await ghLiveGet();if(g.data&&g.data.id===snap.id)liveMerge(snap,g.data);liveSha=await ghLivePut(snap,g.sha)}
+      else throw e}
+    liveMerge(live,snap);live.updatedAt=snap.updatedAt;
+    liveSync=liveDirty?{s:'pending',m:'Saving…'}:{s:'ok',m:'Saved '+hhmm(snap.updatedAt)};
+  }catch(e){liveDirty=true;liveSync={s:'err',m:'Not saved, retrying ('+e.message+')'};clearTimeout(liveSaveTimer);liveSaveTimer=setTimeout(liveFlush,8000)}
+  finally{liveSaving=false;renderLive();if(liveDirty&&liveSync.s!=='err'){clearTimeout(liveSaveTimer);liveSaveTimer=setTimeout(liveFlush,300)}}
+}
+async function liveAdminLoad(force){
+  if(liveAdminLoaded&&!force){renderLive();return}
+  if(!ghCfg().token){liveLoadErr='notoken';renderLive();return}
+  liveLoadErr='';liveSync={s:'',m:'Loading…'};renderLive();
+  try{const g=await ghLiveGet();liveSha=g.sha;
+    if(g.data&&g.data.active){if(live&&live.id===g.data.id)liveMerge(live,g.data);else live=g.data;live.log=live.log||[]}
+    else if(!(live&&live.active))live=g.data;
+    liveAdminLoaded=true;liveSync={s:'ok',m:'Up to date'};
+  }catch(e){liveLoadErr=e.message;try{const b=JSON.parse(localStorage.getItem('live_backup')||'null');if(b&&b.active&&!live)live=b}catch(x){}liveSync={s:'err',m:'Could not load from GitHub'}}
+  renderLive();liveBadge();
+}
+function livePlayers(){const set=new Set(getAllPlayerNames());(live&&live.extra||[]).forEach(n=>set.add(n));Object.keys(liveCounts(live)).forEach(n=>set.add(n));return[...set].sort((a,b)=>a.localeCompare(b))}
+function liveStart(){
+  const date=(document.getElementById('lvDate').value||'').trim();if(!monthKeyFromDateStr(date)){showToast('Date must be DD/MM/YYYY',true);return}
+  const bank=parseInt(document.getElementById('lvBank').value)||null;
+  live={v:1,active:true,id:newId(),date,startedAt:new Date().toISOString(),updatedAt:new Date().toISOString(),bankStart:bank,extra:[],log:[]};
+  liveQueueSave();showToast('Live game started')}
+function liveTap(i){if(!live||!live.active)return;const n=livePlayers()[i];live.log.push({id:newId(),t:new Date().toISOString(),name:n,d:1});const c=liveCounts(live)[n];try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}showToast(n+': hand '+c);liveQueueSave()}
+function liveMinus(ev,i){ev.stopPropagation();if(!live||!live.active)return;const n=livePlayers()[i],c=liveCounts(live)[n]||0;if(c<=0)return;if(!confirm(`Remove one hand from ${n} (${c} → ${c-1})?\nThis shows in the log as a correction.`))return;live.log.push({id:newId(),t:new Date().toISOString(),name:n,d:-1});liveQueueSave()}
+function liveAddPlayer(){const i=document.getElementById('lvNewName'),n=(i.value||'').trim();if(!n||!live)return;if(livePlayers().some(x=>x.toLowerCase()===n.toLowerCase())){showToast('Player exists',true);return}live.extra=live.extra||[];live.extra.push(n);i.value='';liveQueueSave()}
+function liveFinish(){
+  if(!live||!live.active)return;const counts=liveCounts(live);const names=Object.keys(counts).filter(n=>counts[n]>0);
+  if(!names.length){showToast('No hands recorded yet',true);return}
+  editingGameId=null;cancelEdit();
+  names.forEach(n=>{if(!getAllPlayerNames().includes(n))customPlayers.push(n)});renderScoreTable();
+  document.getElementById('adminGameDate').value=live.date;onDateInput();
+  names.forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_');const chk=document.getElementById('chk_'+s);if(chk){chk.checked=true;const sc=document.getElementById('score_'+s),h=document.getElementById('hands_'+s);sc.disabled=false;sc.value='';h.disabled=false;h.value=counts[n]}});
+  updateTally();liveFinishId=live.id;showTab(ADMIN_TAB);
+  setTimeout(()=>document.getElementById('formTitle').scrollIntoView({behavior:'smooth',block:'start'}),100);
+  showToast("Hands filled in. Enter each player's chips and save; the live game closes when it saves.")}
+function liveCancel(){if(!live||!live.active)return;if(!confirm('End the live game without saving it as a game?'))return;live.active=false;live.endedAt=new Date().toISOString();liveFinishId=null;liveQueueSave()}
+
+function liveSummaryHTML(L,admin){
+  const counts=liveCounts(L),total=liveTotal(L),np=Object.values(counts).filter(n=>n>0).length;
+  const bank=L.bankStart?`<div class="live-bank">Bank check: started with <b>${fmt(L.bankStart)}</b> chips in the case, so <b>${fmt(L.bankStart-total*1000)}</b> should be left in it now.</div>`:'';
+  let run={};const log=(L.log||[]).map(e=>{run[e.name]=(run[e.name]||0)+e.d;return{...e,now:run[e.name]}}).reverse().slice(0,admin?12:25);
+  const logHTML=log.length?log.map(e=>`<div class="lv-log ${e.d<0?'corr':''}"><span class="t">${hhmm(e.t)}</span>${esc(e.name)} ${e.d>0?'took hand '+e.now:'correction −1 (now '+e.now+')'}</div>`).join(''):'<div class="lv-log">No buy-ins yet.</div>';
+  return{bank,logHTML,stats:`<div class="hero-stats"><div class="hero-stat"><div class="num">${total}</div><div class="label">Hands issued</div></div><div class="hero-stat"><div class="num">${fmt(total*1000)}</div><div class="label">Chips issued</div></div><div class="hero-stat"><div class="num">${np}</div><div class="label">Players</div></div></div>`,counts}
+}
+function renderLive(){
+  const el=document.getElementById('liveView');if(!el)return;
+  if(isAdminMode){
+    if(liveLoadErr==='notoken'){el.innerHTML=`<div class="live-card"><h3>Set up GitHub first</h3><p>The tracker saves to GitHub. Add your token in the Admin tab (GitHub Connection), save the config, then come back.</p></div>`;return}
+    const sync=liveSync.m?`<span class="lv-sync ${liveSync.s}">${esc(liveSync.m)}</span>`:'';
+    if(!live||!live.active){
+      el.innerHTML=`<div class="live-card"><div class="live-head"><div><div class="live-title">Start a live game</div><div class="live-sub">Banker taps a name each time chips are handed over. Everyone can follow on the Live tab.</div></div>${sync}</div>
+      <div class="form-row" style="margin-bottom:12px"><div style="flex:1"><label class="form-label">Date (DD/MM/YYYY)</label><input id="lvDate" class="form-input" value="${todayStr()}"></div><div style="flex:1"><label class="form-label">Chips in the case at start (optional)</label><input id="lvBank" type="number" class="form-input" placeholder="e.g. 60000"></div></div>
+      <button class="btn btn-gold" onclick="liveStart()">Start live game</button>${liveLoadErr?`<p style="margin-top:10px;color:var(--red)">Couldn't reach GitHub: ${esc(liveLoadErr)}</p>`:''}</div>`;return}
+    const S=liveSummaryHTML(live,true),ps=livePlayers();
+    el.innerHTML=`<div class="live-head"><div><div class="live-title"><span class="live-dot"></span>Live · ${esc(live.date)}</div><div class="live-sub">Started ${hhmm(live.startedAt)} · tap a name for each hand handed over</div></div><div style="display:flex;gap:6px;align-items:center">${sync}<button class="btn btn-sm btn-ghost" onclick="liveAdminLoad(true)">Refresh</button></div></div>
+    ${S.stats}${S.bank}
+    <div class="live-grid">${ps.map((n,i)=>{const c=S.counts[n]||0;return`<div class="lv-tile ${c>0?'has':''}" role="button" onclick="liveTap(${i})"><div class="n">${esc(n)}</div><div class="c">${c}</div>${c>0?`<button class="minus" title="Remove one hand" onclick="liveMinus(event,${i})">−</button>`:''}</div>`}).join('')}</div>
+    <div class="add-player-row"><span style="font-size:13px;color:var(--text3)">New player:</span><input type="text" id="lvNewName" placeholder="Name" onkeydown="if(event.key==='Enter')liveAddPlayer()"><button class="btn btn-sm btn-ghost" onclick="liveAddPlayer()">+ Add</button></div>
+    <div class="lv-actions"><button class="btn btn-gold" onclick="liveFinish()">Finish: enter chips &amp; save</button><button class="btn btn-ghost" style="color:var(--red)" onclick="liveCancel()">End without saving</button></div>
+    <div class="live-card" style="margin-top:16px"><h3>Log</h3>${S.logHTML}</div>`;
+    return}
+  const L=livePublic;
+  if(!L||!L.active){el.innerHTML=`<div class="section-title">Live</div><div class="empty-state">No game running right now.${L&&L.endedAt?`<br><span style="font-size:12px">Last live game: ${esc(L.date)}, ended ${hhmm(L.endedAt)}</span>`:''}</div>`;return}
+  const S=liveSummaryHTML(L,false),rows=Object.entries(S.counts).filter(([,c])=>c>0).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  el.innerHTML=`<div class="live-head"><div><div class="live-title"><span class="live-dot"></span>Live · ${esc(L.date)}</div><div class="live-sub">Started ${hhmm(L.startedAt)} · updated ${ago(L.updatedAt)}${liveViaRaw?' · may lag up to 5 min':''}</div></div><button class="btn btn-sm btn-ghost" onclick="livePoll(true)">Refresh</button></div>
+  ${S.stats}${S.bank}
+  <div class="live-card"><h3>Hands per player</h3><p style="margin-bottom:10px">Check your own count. If it's wrong, tell the banker now.</p>${rows.map(([n,c])=>`<div class="lv-row"><span>${esc(n)}</span><span class="cnt">${c} hand${c>1?'s':''}</span></div>`).join('')||'<div class="lv-log">No buy-ins yet.</div>'}</div>
+  <div class="live-card"><h3>Log</h3>${S.logHTML}</div>`;
+}
+async function livePoll(now){
+  clearTimeout(livePollTimer);
+  if(!FEATURES.liveTracker||isAdminMode)return;
+  const onTab=document.getElementById('tabLive').classList.contains('active');
+  if(now||(onTab&&document.visibilityState==='visible')){try{livePublic=await liveFetchPublic();liveFetchedAt=Date.now()}catch(e){}renderLive();liveBadge()}
+  if(onTab)livePollTimer=setTimeout(()=>livePoll(false),20000);
+}
+function liveBadge(){const b=document.getElementById('liveNavBtn');if(!b)return;const L=isAdminMode?live:livePublic;b.innerHTML=(L&&L.active?'<span class="live-dot"></span>':'')+'Live'}
+async function liveCheckBadge(){if(!FEATURES.liveTracker){const b=document.getElementById('liveNavBtn');if(b)b.style.display='none';return}try{livePublic=await liveFetchPublic()}catch(e){}liveBadge()}
+function onTabChange(i){if(i===LIVE_TAB){if(isAdminMode)liveAdminLoad(false);else livePoll(true)}else clearTimeout(livePollTimer)}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&document.getElementById('tabLive')?.classList.contains('active')&&!isAdminMode)livePoll(true)});
+if(!FEATURES.tallyCheck){const h=document.getElementById('adminGameHands');h.readOnly=false;h.removeAttribute('tabindex');h.style.color='';h.style.cursor='';document.getElementById('tallyBox').style.display='none'}else updateTally();
+
 // ===== INIT =====
-loadSharedData();
+loadSharedData();liveCheckBadge();
 </script>
 </body>
 </html>
