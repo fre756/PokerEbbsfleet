@@ -212,7 +212,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 const ADMIN_PASSWORD="poker2026",DEFAULT_GH={owner:"fre756",repo:"PokerEbbsfleet",branch:"main"},DATA_PATH="games.json";
 // ===== FEATURE SWITCHES =====
 // Set either to false (and commit) to switch that feature off. Scores and saved games are unaffected.
-// Full rollback: restore index.html from the git tag "before-live-tracker".
+// Full rollback: copy index.html from the "before-live-tracker" branch back onto main.
 const FEATURES={
   tallyCheck:true,   // block saving a game when total chips != hands x 1,000, and flag games that don't tally
   liveTracker:true   // Live tab: banker taps a name per buy-in, everyone can follow
