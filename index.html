@@ -144,6 +144,29 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .lv-log .t{font-family:'JetBrains Mono',monospace;color:var(--text4);margin-right:8px}.lv-log.corr{color:#fca5a5}
 .lv-sync{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:600;background:var(--surface2);color:var(--text4)}.lv-sync.ok{background:var(--green-dim);color:var(--green)}.lv-sync.err{background:var(--red-dim);color:var(--red)}.lv-sync.pending{background:var(--gold-dim);color:var(--gold)}
 .lv-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.hero-stats.four .hero-stat{min-width:0}
+.live-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.lv-foot{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center;margin-top:10px}
+.lv-foot input[type=number],.lv-final{width:100%;box-sizing:border-box;min-width:0;padding:7px 9px;border-radius:8px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px}
+.lv-foot input[type=number]:focus{outline:none;border-color:var(--gold)}
+.lv-final{border-style:dashed;background:transparent;color:var(--text2);font-weight:600}
+.lv-foot input[type=number]::-webkit-inner-spin-button,.lv-foot input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.lv-foot input[type=number]{-moz-appearance:textfield}
+.lv-foot input[type=number]::placeholder{color:var(--text4);font-family:'Inter',sans-serif}
+.lv-out{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;white-space:nowrap;padding:6px 7px;border-radius:8px;border:1px solid var(--border2);background:var(--surface)}
+.lv-out input{width:16px;height:16px;accent-color:var(--green);cursor:pointer;margin:0}
+.lv-tile.out{background:var(--bg);border:1px dashed var(--border2);cursor:default}
+.lv-tile.out:hover{border-color:var(--border2)}.lv-tile.out:active{transform:none}
+.lv-tile.out .n,.lv-tile.out .c{color:var(--text4)}
+.lv-tile.out .lv-out{border-color:rgba(16,185,129,0.35);background:var(--green-dim);color:var(--green)}
+.lv-outnote{font-size:11px;color:var(--text4);margin-top:6px}
+.lv-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--surface);color:var(--text3);margin-right:10px;border:1px solid var(--border2)}
+.lv-row.out{opacity:0.55}
+.live-tally{font-size:13px;color:var(--text2);padding:10px 14px;border-radius:10px;background:var(--surface2);border:1px solid var(--border2);margin-bottom:14px}
+.live-tally b{font-family:'JetBrains Mono',monospace;color:var(--gold)}
+.live-tally.ok{background:var(--green-dim);border-color:rgba(16,185,129,0.3);color:var(--green)}
+.live-tally.bad{background:var(--red-dim);border-color:rgba(239,68,68,0.35);color:#fca5a5}
+@media(max-width:600px){.hero-stats.four{display:grid;grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.hero h1{font-size:28px}.hero-stats{gap:8px}.hero-stat .num{font-size:18px}.nav{flex-wrap:wrap}.nav button{font-size:11px;padding:10px 6px}.lb-row{padding:12px;gap:10px}.player-score{font-size:14px;min-width:55px}.game-name{width:70px}.pc-stats{grid-template-columns:repeat(2,1fr)}.form-row{flex-direction:column}.form-input-sm{width:100%}.admin-toggle{bottom:12px;right:12px;font-size:11px;padding:8px 12px}.month-bar{padding:8px 12px}.mb-btn{font-size:12px;padding:6px 10px}}
 </style>
 </head>
@@ -635,7 +658,10 @@ function newId(){return Date.now().toString(36)+Math.random().toString(36).slice
 function todayStr(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
 function hhmm(iso){const d=new Date(iso);return isNaN(d)?'':String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 function ago(iso){const s=Math.max(0,Math.round((Date.now()-new Date(iso))/1000));return s<60?s+'s ago':s<3600?Math.round(s/60)+' min ago':hhmm(iso)}
-function liveCounts(L){const c={};((L&&L.log)||[]).forEach(e=>{c[e.name]=(c[e.name]||0)+e.d});return c}
+function liveCounts(L){const c={};((L&&L.log)||[]).forEach(e=>{if(e.d)c[e.name]=(c[e.name]||0)+e.d});return c}
+// Check-out state is replayed from the log: last 'out'/'in' entry per player wins
+function liveOut(L){const o={};((L&&L.log)||[]).forEach(e=>{if(e.k==='out')o[e.name]={score:e.score,t:e.t};else if(e.k==='in')delete o[e.name]});return o}
+let liveDraft={};
 function liveTotal(L){return Object.values(liveCounts(L)).reduce((t,n)=>t+Math.max(0,n),0)}
 function liveMerge(target,src){const ids=new Set(target.log.map(e=>e.id));(src.log||[]).forEach(e=>{if(!ids.has(e.id))target.log.push(e)});(src.extra||[]).forEach(n=>{target.extra=target.extra||[];if(!target.extra.includes(n))target.extra.push(n)});target.log.sort((a,b)=>a.t.localeCompare(b.t))}
 function ghApi(path){const c=ghCfg();return`https://api.github.com/repos/${c.owner}/${c.repo}/${path}`}
@@ -690,30 +716,50 @@ function liveStart(){
   const bank=parseInt(document.getElementById('lvBank').value)||null;
   live={v:1,active:true,id:newId(),date,startedAt:new Date().toISOString(),updatedAt:new Date().toISOString(),bankStart:bank,extra:[],log:[]};
   liveQueueSave();showToast('Live game started')}
-function liveTap(i){if(!live||!live.active)return;const n=livePlayers()[i];live.log.push({id:newId(),t:new Date().toISOString(),name:n,d:1});const c=liveCounts(live)[n];try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}showToast(n+': hand '+c);liveQueueSave()}
-function liveMinus(ev,i){ev.stopPropagation();if(!live||!live.active)return;const n=livePlayers()[i],c=liveCounts(live)[n]||0;if(c<=0)return;if(!confirm(`Remove one hand from ${n} (${c} → ${c-1})?\nThis shows in the log as a correction.`))return;live.log.push({id:newId(),t:new Date().toISOString(),name:n,d:-1});liveQueueSave()}
+function liveTap(i){if(!live||!live.active)return;const n=livePlayers()[i];if(liveOut(live)[n]){showToast(n+' has checked out. Untick "Out" if they rejoin.',true);return}live.log.push({id:newId(),t:new Date().toISOString(),name:n,d:1});const c=liveCounts(live)[n];try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}showToast(n+': hand '+c);liveQueueSave()}
+function liveMinus(ev,i){ev.stopPropagation();if(!live||!live.active)return;const n=livePlayers()[i],c=liveCounts(live)[n]||0;if(c<=0||liveOut(live)[n])return;if(!confirm(`Remove one hand from ${n} (${c} → ${c-1})?\nThis shows in the log as a correction.`))return;live.log.push({id:newId(),t:new Date().toISOString(),name:n,d:-1});liveQueueSave()}
+function liveToggleOut(i){
+  if(!live||!live.active)return;const n=livePlayers()[i],o=liveOut(live)[n];
+  if(o){if(!confirm(`${n} rejoins the game?\nThey bring their chips back to the table (no new hand is issued). Enter their full chip count when they check out again.`)){renderLive();return}
+    live.log.push({id:newId(),t:new Date().toISOString(),name:n,k:'in'});liveDraft[n]=String(o.score);liveQueueSave();return}
+  const v=(liveDraft[n]??'').toString().trim();
+  if(v===''||isNaN(parseInt(v))||parseInt(v)<0){showToast(`Enter ${n}'s final chips first (0 if bust)`,true);renderLive();const el=document.getElementById('lvScore_'+i);if(el)el.focus();return}
+  live.log.push({id:newId(),t:new Date().toISOString(),name:n,k:'out',score:parseInt(v)});delete liveDraft[n];showToast(`${n} checked out with ${fmt(parseInt(v))}`);liveQueueSave()}
+function liveTallyHTML(L){
+  const counts=liveCounts(L),out=liveOut(L),total=liveTotal(L);if(!total)return'';
+  const issued=total*1000,cashed=Object.values(out).reduce((t,o)=>t+o.score,0),playing=Object.keys(counts).filter(n=>counts[n]>0&&!out[n]);
+  if(!playing.length){const d=cashed-issued;return d===0?`<div class="live-tally ok">✓ Everyone has checked out: ${fmt(cashed)} chips for ${total} hands. It tallies.</div>`:`<div class="live-tally bad">✗ Everyone has checked out: ${fmt(cashed)} chips for ${total} hands (${fmt(issued)}) · ${d>0?'+':'−'}${fmt(Math.abs(d))}. Recount before finishing.</div>`}
+  if(cashed>issued)return`<div class="live-tally bad">✗ ${fmt(cashed)} chips cashed out but only ${fmt(issued)} issued. Someone has hands that weren't recorded.</div>`;
+  return`<div class="live-tally">Still on the table: <b>${fmt(issued-cashed)}</b> chips with the ${playing.length} player${playing.length>1?'s':''} still in (${fmt(issued)} issued − ${fmt(cashed)} cashed out).</div>`}
 function liveAddPlayer(){const i=document.getElementById('lvNewName'),n=(i.value||'').trim();if(!n||!live)return;if(livePlayers().some(x=>x.toLowerCase()===n.toLowerCase())){showToast('Player exists',true);return}live.extra=live.extra||[];live.extra.push(n);i.value='';liveQueueSave()}
 function liveFinish(){
   if(!live||!live.active)return;const counts=liveCounts(live);const names=Object.keys(counts).filter(n=>counts[n]>0);
   if(!names.length){showToast('No hands recorded yet',true);return}
+  const out=liveOut(live),still=names.filter(n=>!out[n]);
+  if(still.length&&!confirm(`${still.length} player${still.length>1?"s haven't":" hasn't"} checked out (${still.join(', ')}).\nFill in the form anyway? You can type their chips there.`))return;
   editingGameId=null;cancelEdit();
   names.forEach(n=>{if(!getAllPlayerNames().includes(n))customPlayers.push(n)});renderScoreTable();
   document.getElementById('adminGameDate').value=live.date;onDateInput();
-  names.forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_');const chk=document.getElementById('chk_'+s);if(chk){chk.checked=true;const sc=document.getElementById('score_'+s),h=document.getElementById('hands_'+s);sc.disabled=false;sc.value='';h.disabled=false;h.value=counts[n]}});
+  names.forEach(n=>{const s=n.replace(/[^a-zA-Z0-9]/g,'_');const chk=document.getElementById('chk_'+s);if(chk){chk.checked=true;const sc=document.getElementById('score_'+s),h=document.getElementById('hands_'+s);sc.disabled=false;sc.value=out[n]?out[n].score:'';h.disabled=false;h.value=counts[n]}});
   updateTally();liveFinishId=live.id;showTab(ADMIN_TAB);
   setTimeout(()=>document.getElementById('formTitle').scrollIntoView({behavior:'smooth',block:'start'}),100);
   showToast("Hands filled in. Enter each player's chips and save; the live game closes when it saves.")}
 function liveCancel(){if(!live||!live.active)return;if(!confirm('End the live game without saving it as a game?'))return;live.active=false;live.endedAt=new Date().toISOString();liveFinishId=null;liveQueueSave()}
 
 function liveSummaryHTML(L,admin){
-  const counts=liveCounts(L),total=liveTotal(L),np=Object.values(counts).filter(n=>n>0).length;
+  const counts=liveCounts(L),total=liveTotal(L),out=liveOut(L),np=Object.values(counts).filter(n=>n>0).length,nOut=Object.keys(out).filter(n=>counts[n]>0).length;
   const bank=L.bankStart?`<div class="live-bank">Bank check: started with <b>${fmt(L.bankStart)}</b> chips in the case, so <b>${fmt(L.bankStart-total*1000)}</b> should be left in it now.</div>`:'';
-  let run={};const log=(L.log||[]).map(e=>{run[e.name]=(run[e.name]||0)+e.d;return{...e,now:run[e.name]}}).reverse().slice(0,admin?12:25);
-  const logHTML=log.length?log.map(e=>`<div class="lv-log ${e.d<0?'corr':''}"><span class="t">${hhmm(e.t)}</span>${esc(e.name)} ${e.d>0?'took hand '+e.now:'correction −1 (now '+e.now+')'}</div>`).join(''):'<div class="lv-log">No buy-ins yet.</div>';
-  return{bank,logHTML,stats:`<div class="hero-stats"><div class="hero-stat"><div class="num">${total}</div><div class="label">Hands issued</div></div><div class="hero-stat"><div class="num">${fmt(total*1000)}</div><div class="label">Chips issued</div></div><div class="hero-stat"><div class="num">${np}</div><div class="label">Players</div></div></div>`,counts}
+  let run={};const log=(L.log||[]).map(e=>{if(e.d)run[e.name]=(run[e.name]||0)+e.d;return{...e,now:run[e.name]||0}}).reverse().slice(0,admin?14:25);
+  const logTxt=e=>e.k==='out'?`checked out with ${fmt(e.score)} chips (${e.now} hand${e.now!==1?'s':''})`:e.k==='in'?'rejoined the game':e.d>0?'took hand '+e.now:'correction −1 (now '+e.now+')';
+  const logHTML=log.length?log.map(e=>`<div class="lv-log ${e.d<0?'corr':''}"><span class="t">${hhmm(e.t)}</span>${esc(e.name)} ${logTxt(e)}</div>`).join(''):'<div class="lv-log">No buy-ins yet.</div>';
+  return{bank,logHTML,stats:`<div class="hero-stats four"><div class="hero-stat"><div class="num">${total}</div><div class="label">Hands issued</div></div><div class="hero-stat"><div class="num">${fmt(total*1000)}</div><div class="label">Chips issued</div></div><div class="hero-stat"><div class="num">${np-nOut}</div><div class="label">Playing</div></div><div class="hero-stat"><div class="num">${nOut}</div><div class="label">Checked out</div></div></div>${liveTallyHTML(L)}`,counts,out}
 }
 function renderLive(){
   const el=document.getElementById('liveView');if(!el)return;
+  const fa=document.activeElement,fid=fa&&fa.id&&fa.id.startsWith('lvScore_')?fa.id:null;
+  if(fid){renderLiveInner(el);const f=document.getElementById(fid);if(f&&!f.disabled){f.focus();try{const L=f.value.length;f.setSelectionRange(L,L)}catch(e){}}return}
+  renderLiveInner(el)}
+function renderLiveInner(el){
   if(isAdminMode){
     if(liveLoadErr==='notoken'){el.innerHTML=`<div class="live-card"><h3>Set up GitHub first</h3><p>The tracker saves to GitHub. Add your token in the Admin tab (GitHub Connection), save the config, then come back.</p></div>`;return}
     const sync=liveSync.m?`<span class="lv-sync ${liveSync.s}">${esc(liveSync.m)}</span>`:'';
@@ -724,7 +770,10 @@ function renderLive(){
     const S=liveSummaryHTML(live,true),ps=livePlayers();
     el.innerHTML=`<div class="live-head"><div><div class="live-title"><span class="live-dot"></span>Live · ${esc(live.date)}</div><div class="live-sub">Started ${hhmm(live.startedAt)} · tap a name for each hand handed over</div></div><div style="display:flex;gap:6px;align-items:center">${sync}<button class="btn btn-sm btn-ghost" onclick="liveAdminLoad(true)">Refresh</button></div></div>
     ${S.stats}${S.bank}
-    <div class="live-grid">${ps.map((n,i)=>{const c=S.counts[n]||0;return`<div class="lv-tile ${c>0?'has':''}" role="button" onclick="liveTap(${i})"><div class="n">${esc(n)}</div><div class="c">${c}</div>${c>0?`<button class="minus" title="Remove one hand" onclick="liveMinus(event,${i})">−</button>`:''}</div>`}).join('')}</div>
+    <div class="live-grid">${ps.map((n,i)=>{const c=S.counts[n]||0,o=S.out[n];
+      const foot=(c>0||o)?`<div class="lv-foot" onclick="event.stopPropagation()">${o?`<div class="lv-final" title="Final chips">${fmt(o.score)}</div>`:`<input id="lvScore_${i}" type="number" inputmode="numeric" min="0" placeholder="Chips" value="${esc(liveDraft[n]??'')}" oninput="liveDraft[livePlayers()[${i}]]=this.value" onkeydown="if(event.key==='Enter')liveToggleOut(${i})">`}<label class="lv-out" title="${o?'Untick if they rejoin':'Tick when they leave'}"><input type="checkbox" ${o?'checked':''} onchange="liveToggleOut(${i})">Out</label></div>`:'';
+      const note=o?`<div class="lv-outnote">✓ Out ${hhmm(o.t)} · <span style="color:${resClr(o.score-c*1000)}">${fmtRes(o.score-c*1000)}</span></div>`:'';
+      return`<div class="lv-tile ${c>0?'has':''} ${o?'out':''}" role="button" onclick="liveTap(${i})"><div class="n">${esc(n)}</div><div class="c">${c}</div>${c>0&&!o?`<button class="minus" title="Remove one hand" onclick="liveMinus(event,${i})">−</button>`:''}${foot}${note}</div>`}).join('')}</div>
     <div class="add-player-row"><span style="font-size:13px;color:var(--text3)">New player:</span><input type="text" id="lvNewName" placeholder="Name" onkeydown="if(event.key==='Enter')liveAddPlayer()"><button class="btn btn-sm btn-ghost" onclick="liveAddPlayer()">+ Add</button></div>
     <div class="lv-actions"><button class="btn btn-gold" onclick="liveFinish()">Finish: enter chips &amp; save</button><button class="btn btn-ghost" style="color:var(--red)" onclick="liveCancel()">End without saving</button></div>
     <div class="live-card" style="margin-top:16px"><h3>Log</h3>${S.logHTML}</div>`;
@@ -734,7 +783,7 @@ function renderLive(){
   const S=liveSummaryHTML(L,false),rows=Object.entries(S.counts).filter(([,c])=>c>0).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
   el.innerHTML=`<div class="live-head"><div><div class="live-title"><span class="live-dot"></span>Live · ${esc(L.date)}</div><div class="live-sub">Started ${hhmm(L.startedAt)} · updated ${ago(L.updatedAt)}${liveViaRaw?' · may lag up to 5 min':''}</div></div><button class="btn btn-sm btn-ghost" onclick="livePoll(true)">Refresh</button></div>
   ${S.stats}${S.bank}
-  <div class="live-card"><h3>Hands per player</h3><p style="margin-bottom:10px">Check your own count. If it's wrong, tell the banker now.</p>${rows.map(([n,c])=>`<div class="lv-row"><span>${esc(n)}</span><span class="cnt">${c} hand${c>1?'s':''}</span></div>`).join('')||'<div class="lv-log">No buy-ins yet.</div>'}</div>
+  <div class="live-card"><h3>Hands per player</h3><p style="margin-bottom:10px">Check your own count. If it's wrong, tell the banker now. Greyed-out players have checked out.</p>${rows.map(([n,c])=>{const o=S.out[n];return`<div class="lv-row ${o?'out':''}"><span>${esc(n)}</span><span>${o?`<span class="lv-badge">✓ Out · ${fmt(o.score)}</span>`:''}<span class="cnt">${c} hand${c>1?'s':''}</span></span></div>`}).join('')||'<div class="lv-log">No buy-ins yet.</div>'}</div>
   <div class="live-card"><h3>Log</h3>${S.logHTML}</div>`;
 }
 async function livePoll(now){
