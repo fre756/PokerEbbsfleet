@@ -1,49 +1,11 @@
 {
  "v": 1,
- "active": false,
- "id": "mwrtq8z7govzx",
+ "active": true,
+ "id": "mws57d0t4kvgv",
  "date": "22/11/2026",
- "startedAt": "2026-11-22T12:39:25.171Z",
- "updatedAt": "2026-11-22T18:00:36.943Z",
+ "startedAt": "2026-11-22T18:00:39.341Z",
+ "updatedAt": "2026-11-22T18:00:40.544Z",
  "bankStart": null,
  "extra": [],
- "log": [
-  {
-   "id": "mwrtqfbjbse6k",
-   "t": "2026-11-22T12:39:33.391Z",
-   "name": "Sundeep",
-   "d": 1
-  },
-  {
-   "id": "mwrtqgsjuj7n0",
-   "t": "2026-11-22T12:39:35.299Z",
-   "name": "Sundeep",
-   "d": 1
-  },
-  {
-   "id": "mwrtqjizyad9z",
-   "t": "2026-11-22T12:39:38.843Z",
-   "name": "Sundeep",
-   "d": -1
-  },
-  {
-   "id": "mws56yi3cppud",
-   "t": "2026-11-22T18:00:20.523Z",
-   "name": "Sundeep",
-   "d": 1
-  },
-  {
-   "id": "mws571qv16g71",
-   "t": "2026-11-22T18:00:24.727Z",
-   "name": "Sundeep",
-   "d": -1
-  },
-  {
-   "id": "mws57323dqf6v",
-   "t": "2026-11-22T18:00:26.427Z",
-   "name": "Sundeep",
-   "d": -1
-  }
- ],
- "endedAt": "2026-11-22T18:00:35.740Z"
+ "log": []
 }
