@@ -4,7 +4,7 @@
  "id": "mws57d0t4kvgv",
  "date": "22/11/2026",
  "startedAt": "2026-11-22T18:00:39.341Z",
- "updatedAt": "2026-11-22T20:59:35.186Z",
+ "updatedAt": "2026-11-22T21:20:43.944Z",
  "bankStart": null,
  "extra": [],
  "log": [
@@ -150,6 +150,12 @@
    "id": "mwsblfxajmc1a",
    "t": "2026-11-22T20:59:33.982Z",
    "name": "Veeru",
+   "d": 1
+  },
+  {
+   "id": "mwsccmwj7b54x",
+   "t": "2026-11-22T21:20:42.739Z",
+   "name": "Prakash",
    "d": 1
   }
  ]
