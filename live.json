@@ -4,7 +4,7 @@
  "id": "mws57d0t4kvgv",
  "date": "22/11/2026",
  "startedAt": "2026-11-22T18:00:39.341Z",
- "updatedAt": "2026-11-22T19:05:35.951Z",
+ "updatedAt": "2026-11-22T19:05:40.767Z",
  "bankStart": null,
  "extra": [],
  "log": [
@@ -108,6 +108,12 @@
    "id": "mws7iuqh6svpr",
    "t": "2026-11-22T19:05:34.745Z",
    "name": "Jags",
+   "d": 1
+  },
+  {
+   "id": "mws7iygc38gnx",
+   "t": "2026-11-22T19:05:39.564Z",
+   "name": "Suri",
    "d": 1
   }
  ]
