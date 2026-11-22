@@ -1,10 +1,10 @@
 {
  "v": 1,
- "active": true,
+ "active": false,
  "id": "mwqwr1xkzauoe",
  "date": "21/11/2026",
  "startedAt": "2026-11-21T21:16:15.370Z",
- "updatedAt": "2026-11-22T01:35:53.915Z",
+ "updatedAt": "2026-11-22T12:39:10.027Z",
  "bankStart": 30000,
  "extra": [],
  "log": [
@@ -206,5 +206,6 @@
    "name": "Venki",
    "d": 1
   }
- ]
+ ],
+ "endedAt": "2026-11-22T12:39:08.824Z"
 }
