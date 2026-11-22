@@ -4,7 +4,7 @@
  "id": "mws57d0t4kvgv",
  "date": "22/11/2026",
  "startedAt": "2026-11-22T18:00:39.341Z",
- "updatedAt": "2026-11-22T18:03:06.539Z",
+ "updatedAt": "2026-11-22T18:03:09.639Z",
  "bankStart": null,
  "extra": [],
  "log": [
@@ -66,6 +66,12 @@
    "id": "mws5aho76o423",
    "t": "2026-11-22T18:03:05.335Z",
    "name": "Mahesh",
+   "d": 1
+  },
+  {
+   "id": "mws5ak2b89i6z",
+   "t": "2026-11-22T18:03:08.435Z",
+   "name": "Bala",
    "d": 1
   }
  ]
