@@ -1,10 +1,10 @@
 {
  "v": 1,
- "active": true,
+ "active": false,
  "id": "mws57d0t4kvgv",
  "date": "22/11/2026",
  "startedAt": "2026-11-22T18:00:39.341Z",
- "updatedAt": "2026-11-22T21:20:43.944Z",
+ "updatedAt": "2026-11-22T22:05:56.982Z",
  "bankStart": null,
  "extra": [],
  "log": [
@@ -158,5 +158,6 @@
    "name": "Prakash",
    "d": 1
   }
- ]
+ ],
+ "endedAt": "2026-11-22T22:05:55.772Z"
 }
