@@ -4,7 +4,7 @@
  "id": "mws57d0t4kvgv",
  "date": "22/11/2026",
  "startedAt": "2026-11-22T18:00:39.341Z",
- "updatedAt": "2026-11-22T18:02:46.593Z",
+ "updatedAt": "2026-11-22T18:02:51.015Z",
  "bankStart": null,
  "extra": [],
  "log": [
@@ -30,6 +30,18 @@
    "id": "mws5a2szylflf",
    "t": "2026-11-22T18:02:46.067Z",
    "name": "Prakash",
+   "d": 1
+  },
+  {
+   "id": "mws5a57olqtra",
+   "t": "2026-11-22T18:02:49.188Z",
+   "name": "Nivas",
+   "d": 1
+  },
+  {
+   "id": "mws5a5p03o4kz",
+   "t": "2026-11-22T18:02:49.812Z",
+   "name": "Nivas",
    "d": 1
   }
  ]
